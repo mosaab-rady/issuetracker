@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
     <ProjectReference Include="..\issuetracker.Entities\issuetracker.Entities.csproj" />
     <ProjectReference Include="..\issuetracker.Database\issuetracker.Database.csproj" />
     <ProjectReference Include="..\issuetracker.Services\issuetracker.Services.csproj" />
+    <ProjectReference Include="..\issuetracker.ViewModels\issuetracker.ViewModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
