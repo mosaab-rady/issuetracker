@@ -1,5 +1,5 @@
 <div class="border-2 border-end" id="sidenvContainer">
-	<div id="mySidenav" class="sidenav text-center ps-4 pe-2">
+	<div id="mySidenav" class="sidenav text-center ps-4 pe-2" style="position: sticky; left: 0; top: 3.3rem;">
 
 		<div class="mt-3 text-start">
 			<a href="" class="btn btn-outline-danger rounded-3">Create New Issue</a>
@@ -8,17 +8,23 @@
 		<div class="mt-5">
 
 			<div class="my-2">
-				<a href="" class="btn btn-primary w-100 text-start">
-					<i class="bi bi-house-door"></i>
-					&nbsp;Dashboard
-				</a>
+
+					<a asp-action="index" asp-controller="home" 
+					class=@(Context.Request.Path == "/" ? "btn-primary btn w-100 text-start" : "sidebarLink btn w-100 text-start")>
+						<i class="bi bi-house-door"></i>
+						&nbsp;Dashboard
+					</a>
+
 			</div>
+
 			<div class="my-2">
-				<a href="" class="btn w-100 text-start sidebarLink">
+				<a asp-action="index" asp-controller="projects"
+					class=@(Context.Request.Path.ToString().StartsWith("/projects") ? "btn-primary btn w-100 text-start" : "sidebarLink btn w-100 text-start")>
 					<i class="bi bi-grid"></i>
 					&nbsp;Projects
 				</a>
 			</div>
+			
 			<div class="my-2">
 				<a href="" class="btn w-100 text-start sidebarLink">
 					<i class="bi bi-x-diamond"></i>
