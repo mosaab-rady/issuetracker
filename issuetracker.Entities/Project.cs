@@ -14,15 +14,15 @@ public class Project
 	public string Slug { get; set; }
 
 	[Required]
-	public DateTimeOffset StartDate { get; set; }
+	public DateTime StartDate { get; set; }
 
 	[Required]
-	public DateTimeOffset TargetEndDate { get; set; }
+	public DateTime TargetEndDate { get; set; }
 
-	public DateTimeOffset ActualEndDate { get; set; }
+	public DateTime ActualEndDate { get; set; }
 
 	[Required]
-	public DateTimeOffset CreatedOn { get; set; }
+	public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
 	public List<Issue> Issues { get; set; }
 }
