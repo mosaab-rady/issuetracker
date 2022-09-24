@@ -12,4 +12,6 @@ public class Tag
 
 	[Required]
 	public string Color { get; set; }
+
+	public List<Issue> Issues { get; set; }
 }
