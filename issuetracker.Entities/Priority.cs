@@ -4,7 +4,6 @@ namespace issuetracker.Entities;
 
 public class Priority
 {
-
 	[Key]
 	public Guid Id { get; set; }
 
@@ -13,4 +12,5 @@ public class Priority
 
 	[Required]
 	public string Color { get; set; }
+	public List<Issue> Issues { get; set; }
 }
