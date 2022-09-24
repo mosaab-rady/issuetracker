@@ -17,12 +17,11 @@ public class Issue
 	public string Description { get; set; }
 
 	[Required]
-	public DateTimeOffset CreatedOn { get; set; }
+	public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
+	public DateTime TargetResolutionDate { get; set; }
 
-	public DateTimeOffset TargetResolutionDate { get; set; }
-
-	public DateTimeOffset ActualResolutionDate { get; set; }
+	public DateTime ActualResolutionDate { get; set; }
 
 	[Required]
 	public Project Project { get; set; }
