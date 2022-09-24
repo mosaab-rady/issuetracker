@@ -8,18 +8,15 @@ namespace issuetracker.mvc.Controllers;
 public class HomeController : Controller
 {
 	private readonly ILogger<HomeController> _logger;
-	private readonly IProjectsService service;
 
-	public HomeController(ILogger<HomeController> logger, IProjectsService service)
+	public HomeController(ILogger<HomeController> logger)
 	{
 		_logger = logger;
-		this.service = service;
 	}
 
-	public async Task<IActionResult> Index()
+	public IActionResult Index()
 	{
-		var projects = await service.GetAllProjectsAsync();
-		return View(projects);
+		return View();
 	}
 
 	public IActionResult Privacy()
