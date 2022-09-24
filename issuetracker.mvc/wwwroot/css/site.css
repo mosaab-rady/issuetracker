@@ -32,6 +32,18 @@ body {
   background-color: rgba(172, 171, 171, 0.525);
 }
 
+.sidebarLink {
+  background-color: #ececff;
+}
+
 .sidebarLink:hover {
   background-color: #c6d9f5;
+}
+
+.projectRow {
+  background-color: #f6f6fa;
+}
+
+.projectRow:hover {
+  scale: 1.01;
 }
