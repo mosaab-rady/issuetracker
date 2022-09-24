@@ -1,0 +1,46 @@
+@model IEnumerable<Project>
+@{
+	ViewData["Title"] = "Projects";
+}
+
+<div class="container-fluid my-3">
+	<div class="row px-3 ">
+		<div class="col text-end">
+			<a asp-action="create" asp-controller="projects" class="btn btn-outline-info">
+				Create Project
+			</a>
+		</div>
+	</div>
+	<div class="row">
+		@if (Model.Count() == 0)
+		{
+			<div class="col text-center">
+				<h4>No Projects yet</h4>
+			</div>
+		}
+		else
+		{
+			<div class="col-11 mt-5 mx-auto gap-5">
+				<div class="row py-3">
+					<div class="col-3 fw-bold">Name</div>
+					<div class="col-3 fw-bold">Start Date</div>
+					<div class="col-3 fw-bold">Target End Date</div>
+					<div class="col-3 fw-bold">Actual End Date</div>
+				</div>
+
+				@foreach (var proj in Model)
+				{
+					<a asp-action="project" asp-controller="projects" asp-route-id="@proj.Slug"
+				style="color: black; text-decoration: none;">
+						<div class="projectRow row py-3 my-3 shadow rounded-3 border-start border-5 border-success">
+							<div class="col-3 h6">@proj.Name</div>
+							<div class="col-3">@proj.StartDate</div>
+							<div class="col-3">@proj.TargetEndDate</div>
+							<div class="col-3">@proj.ActualEndDate</div>
+						</div>
+					</a>
+				}
+			</div>
+		}
+	</div>
+</div>
