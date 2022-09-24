@@ -1,0 +1,37 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.sidenav {
+  min-height: 90vh;
+  width: 250px;
+  overflow: hidden;
+}
+
+#sidebar_toggle_btn {
+  border-radius: 100%;
+  transition: all linear 0.2s;
+}
+
+#sidebar_toggle_btn:active {
+  background-color: rgba(172, 171, 171, 0.525);
+}
+
+.sidebarLink:hover {
+  background-color: #c6d9f5;
+}
