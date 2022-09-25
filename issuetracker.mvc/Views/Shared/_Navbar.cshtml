@@ -1,7 +1,9 @@
+@inject SignInManager<AppUser> signInManager;
+
 <nav class="navbar-light bg-white border-bottom box-shadow p-2">
 	<div class="container-fluid d-flex align-items-center ">
 
-		<button class="active me-4 border border-light" id="sidebar_toggle_btn">
+		<button class="me-4 border border-light activeclick" id="sidebar_toggle_btn">
 			<i class="bi bi-list h4"></i>
 		</button>
 
@@ -9,6 +11,21 @@
 			<i class="bi bi-bug-fill"></i>
 			IssueTracker
 		</a>
+
+		<div class="ms-auto">
+			@if (signInManager.IsSignedIn(User))
+			{
+				<h6>
+					@User.Identity.Name
+				</h6>
+
+			}
+			else
+			{
+				<a asp-action="login" asp-controller="account"
+				class="text-dark text-decoration-none activeclick px-2 py-1 rounded-pill">SignIn</a>
+			}
+		</div>
 
 	</div>
 </nav>
