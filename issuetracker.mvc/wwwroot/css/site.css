@@ -32,6 +32,14 @@ body {
   background-color: rgba(172, 171, 171, 0.525);
 }
 
+.activeclick {
+  transition: all linear 0.2s;
+}
+
+.activeclick:active {
+  background-color: rgba(172, 171, 171, 0.525);
+}
+
 .sidebarLink {
   background-color: #ececff;
 }
@@ -46,4 +54,8 @@ body {
 
 .projectRow:hover {
   scale: 1.01;
+}
+
+.boxshadow {
+  box-shadow: 0px 2px 4px 0px rgb(0 0 0 / 30%), 0px 2px 6px 2px rgb(0 0 0 / 15%);
 }
