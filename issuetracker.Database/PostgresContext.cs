@@ -1,9 +1,10 @@
 using issuetracker.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace issuetracker.Database;
 
-public class PostgresContext : DbContext
+public class PostgresContext : IdentityDbContext<AppUser>
 {
 	public PostgresContext(DbContextOptions<PostgresContext> options) : base(options)
 	{
@@ -21,9 +22,11 @@ public class PostgresContext : DbContext
 
 	public DbSet<Priority> Priority { get; set; }
 
-
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
+
+		base.OnModelCreating(modelBuilder);
+
 		modelBuilder.HasPostgresExtension("uuid-ossp");
 
 
