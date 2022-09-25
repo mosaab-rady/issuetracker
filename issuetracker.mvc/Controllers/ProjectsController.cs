@@ -21,11 +21,20 @@ public class ProjectsController : Controller
 		return View(projects);
 	}
 
+
+	[HttpGet]
+	public async Task<IActionResult> Project(string id)
+	{
+		Project project = await projectsService.GetOneProjectAsync(slug: id);
+		return View(project);
+	}
+
+
+
 	[HttpGet]
 	public IActionResult Create()
 	{
-		CreateProjectViewModel model = new();
-		return View(model);
+		return View();
 	}
 
 
