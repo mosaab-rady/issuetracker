@@ -1,5 +1,7 @@
 using issuetracker.Database;
+using issuetracker.Entities;
 using issuetracker.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,15 @@ builder.Services.AddDbContextPool<PostgresContext>(options =>
 	.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
 	.EnableSensitiveDataLogging();
 });
+
+
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
+	options.Password.RequireUppercase = false;
+	options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<PostgresContext>()
+.AddDefaultTokenProviders();
 
 
 builder.Services.AddTransient<IProjectsService, ProjectsService>();
@@ -34,6 +45,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
