@@ -1,11 +1,13 @@
 using issuetracker.Entities;
 using issuetracker.Services;
 using issuetracker.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Slugify;
 
 namespace issuetracker.mvc.Controllers;
 
+[Authorize]
 public class ProjectsController : Controller
 {
 	private readonly IProjectsService projectsService;
