@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using issuetracker.mvc.Models;
 using issuetracker.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace issuetracker.mvc.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
 	private readonly ILogger<HomeController> _logger;
