@@ -32,11 +32,11 @@ body {
   background-color: rgba(172, 171, 171, 0.525);
 }
 
-.activeclick {
+.activelink {
   transition: all linear 0.2s;
 }
 
-.activeclick:active {
+.activelink:active {
   background-color: rgba(172, 171, 171, 0.525);
 }
 

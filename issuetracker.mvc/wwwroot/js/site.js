@@ -25,11 +25,15 @@ function toggle() {
 }
 
 function openNav() {
-	document.getElementById("mySidenav").style.display = "block";
-	document.getElementById("sidenvContainer").style.padding = "0";
+	if (sidebar) {
+		sidebar.style.display = "block";
+		document.getElementById("sidenvContainer").style.padding = "0";
+	}
 }
 
 function closeNav() {
-	document.getElementById("mySidenav").style.display = "none";
-	document.getElementById("sidenvContainer").style.padding = "0 1rem";
+	if (sidebar) {
+		sidebar.style.display = "none";
+		document.getElementById("sidenvContainer").style.padding = "0 1rem";
+	}
 }
