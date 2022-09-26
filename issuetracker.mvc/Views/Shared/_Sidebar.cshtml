@@ -1,4 +1,8 @@
-<div class="border-2 border-end" id="sidenvContainer">
+@inject SignInManager<AppUser> signInManager;
+
+<div class="border-2 border-end" id="sidenvContainer" style="padding: 0 1rem;">
+@if(signInManager.IsSignedIn(User))
+{
 	<div id="mySidenav" class="sidenav text-center ps-4 pe-2" style="position: sticky; left: 0; top: 3.3rem;">
 
 		<div class="mt-3 text-start">
@@ -43,37 +47,16 @@
 					&nbsp;Reports
 				</a>
 			</div>
-
-
-
-		</div>
-
-		@* <div class="mt-3 mb-5 ms-3">
-			<a href="#" class="createIssueBtn active rounded-pill text-dark py-2">
-			<i class="bi bi-plus-lg" style="color: rgb(79, 19, 200);"></i>&nbsp; Create Issue
-			</a>
+			
+				<div class="my-2">
+				<a asp-action="listroles" asp-controller="adminstration"
+					class=@(Context.Request.Path.ToString().StartsWith("/adminstration") ? "btn-primary btn w-100 text-start" : "sidebarLink btn w-100 text-start")>
+					<i class="bi bi-box-seam"></i>
+					&nbsp;Adminstration
+				</a>
 			</div>
 
-			<div class="my-3">
-			<a href="" class="sidebarLink">
-			<i class="bi bi-house-door-fill"></i>
-			&nbsp;DashBoard
-			</a>
-			<a href="" class="sidebarLink">
-			<i class="bi bi-house-door-fill"></i>
-			&nbsp;Projects
-			</a><a href="" class="sidebarLink">
-			<i class="bi bi-house-door-fill"></i>
-			&nbsp;Issues
-			</a><a href="" class=" sidebarLink">
-			<i class="bi bi-house-door-fill"></i>
-			&nbsp;Users
-			</a><a href="" class="sidebarLink">
-			<i class="bi bi-house-door-fill"></i>
-			&nbsp;Reports
-			</a>
-			</div> *@
-
-
+		</div>
 	</div>
+}
 </div>
