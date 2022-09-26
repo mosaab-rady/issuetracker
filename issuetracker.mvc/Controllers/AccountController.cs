@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using issuetracker.Entities;
 using issuetracker.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
@@ -84,7 +85,7 @@ public class AccountController : Controller
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
+	public async Task<IActionResult> Login(LoginViewModel model)
 	{
 		if (!ModelState.IsValid)
 		{
@@ -107,16 +108,18 @@ public class AccountController : Controller
 			return View(model);
 		}
 
-
-		if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-		{
-			return Redirect(returnUrl);
-		}
-
 		return RedirectToAction("index", "home");
 
 	}
 
+	[Authorize]
+	[HttpPost]
+	public async Task<IActionResult> Logout()
+	{
+		await signInManager.SignOutAsync();
+
+		return RedirectToAction("index", "home");
+	}
 
 
 	private async Task<string> ProcessUploadImage(IFormFile model, string name)
