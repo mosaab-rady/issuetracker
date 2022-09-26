@@ -4,9 +4,9 @@
 }
 
 <div class="container-fluid my-3">
-	<div class="row px-3 ">
+	<div class="row me-2">
 		<div class="col text-end">
-			<a asp-action="create" asp-controller="projects" class="btn btn-info">
+			<a asp-action="create" asp-controller="projects" class="btn btn-primary">
 				Create Project
 			</a>
 		</div>
@@ -32,7 +32,7 @@
 				{
 					<a asp-action="project" asp-controller="projects" asp-route-id="@proj.Slug"
 				style="color: black; text-decoration: none;">
-						<div class="projectRow row py-3 my-3 shadow rounded-3 border-start border-5 border-success">
+						<div class="projectRow row py-3 my-3 boxshadow rounded-3 border-start border-5 border-success">
 							<div class="col-3 h6">@proj.Name</div>
 							<div class="col-3">@proj.StartDate</div>
 							<div class="col-3">@proj.TargetEndDate</div>
