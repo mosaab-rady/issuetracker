@@ -3,38 +3,38 @@
 	ViewData["Title"] = "Sign up";
 }
 
-<div class="container-fluid">
+<div class="container-fluid my-3">
 	<div class="row">
-		<div class="col-md-5 mt-5 mx-auto py-5 px-4 boxshadow">
+		<div class="col-md-5 mx-auto rounded-3 p-4 boxshadow">
 			<form asp-action="register" asp-controller="account" method="post" enctype="multipart/form-data">
-				<legend class="text-primary">Register</legend>
+				<legend class="text-primary mb-4">Register</legend>
 				<div class="text-danger" asp-validation-summary="All"></div>
-				<div class="form-group my-2">
+				<div class="form-group my-3">
 					<label asp-for="FirstName" class="form-label fw-bold text-muted"></label>
 					<input asp-for="FirstName" class="form-control">
 					<span asp-validation-for="FirstName" class="text-danger"></span>
 				</div>
-				<div class="form-group my-2">
+				<div class="form-group my-3">
 					<label asp-for="LastName" class="form-label fw-bold text-muted"></label>
 					<input asp-for="LastName" class="form-control">
 					<span asp-validation-for="LastName" class="text-danger"></span>
 				</div>
-				<div class="form-group my-2">
+				<div class="form-group my-3">
 					<label asp-for="Email" class="form-label fw-bold text-muted"></label>
 					<input asp-for="Email" class="form-control">
 					<span asp-validation-for="Email" class="text-danger"></span>
 				</div>
-				<div class="form-group my-2">
+				<div class="form-group my-3">
 					<label asp-for="Password" class="form-label fw-bold text-muted"></label>
 					<input asp-for="Password" class="form-control">
 					<span asp-validation-for="Password" class="text-danger"></span>
 				</div>
-				<div class="form-group my-2">
+				<div class="form-group my-3">
 					<label asp-for="ConfirmPassword" class="form-label fw-bold text-muted"></label>
 					<input asp-for="ConfirmPassword" class="form-control">
 					<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 				</div>
-				<div class="form-group my-2">
+				<div class="form-group my-3">
 					<label asp-for="Image" class="form-label fw-bold text-muted" style="display: block;"></label>
 					<img src="/img/default-user-image.png" class="img-fluid rounded-circle boxshadow my-3" width="100px"
 						height="100px" alt="No Image" id="userImage">
