@@ -1,0 +1,68 @@
+@model EditRoleViewModel
+@{
+	ViewData["Title"] = "Edit Role";
+}
+
+<div class="container-fluid my-3">
+	<div class="row">
+		<div class="col-md-4 mx-auto boxshadow py-4 ">
+			<form asp-action="EditRole" asp-controller="adminstration" method="post">
+				<legend class="text-dark mb-4">Edit Role</legend>
+
+				<div class="form-floating my-3">
+					<input asp-for="Id" disabled class="form-control bg-primary text-dark">
+					<label asp-for="Id" class="form-label fw-bold">Role Id</label>
+				</div>
+				<div class="form-group my-3">
+					<label asp-for="Name" class="form-label fw-bold text-muted"></label>
+					<input asp-for="Name" class="form-control">
+				</div>
+
+
+				<div class="d-flex align-items-center gap-3 my-3">
+					<button type="submit" class="btn btn-outline-dark w-25">Update</button>
+					<a asp-action="ListRoles" asp-controller="adminstration" class="btn btn-outline-primary w-25">Cancel</a>
+				</div>
+
+
+				<div asp-validation-summary="All" class="text-danger"></div>
+			</form>
+
+
+			<div class="mt-5">
+				<div class="card">
+					<div class="card-header bg-dark text-light ">
+						Users In This Role
+					</div>
+					<div class="card-body">
+						@if (Model.Users.Count() == 0)
+						{
+							<h6>No users yet</h6>
+						}
+						else
+						{
+							foreach (var user in Model.Users)
+							{
+								<li>
+									@user
+								</li>
+							}
+						}
+					</div>
+					<div class="card-footer">
+						<a asp-action="editusersinrole" asp-controller="adminstration" asp-route-roleId="@Model.Id"
+							class="btn btn-outline-dark">
+							Add or Remove users
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
