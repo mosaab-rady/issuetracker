@@ -13,4 +13,8 @@ public class AppUser : IdentityUser
 
 	[Required]
 	public string Image { get; set; }
+
+	public List<Issue> AssignedIssues { get; set; }
+
+	public List<Project> AssignedProjects { get; set; }
 }
