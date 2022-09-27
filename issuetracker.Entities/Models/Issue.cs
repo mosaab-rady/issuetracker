@@ -19,7 +19,8 @@ public class Issue
 	[Required]
 	public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
-	public AppUser CreatedBy { get; set; }
+	[Required]
+	public string CreatedBy { get; set; }
 
 	public DateTime TargetResolutionDate { get; set; }
 
