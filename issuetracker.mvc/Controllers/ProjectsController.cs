@@ -55,6 +55,7 @@ public class ProjectsController : Controller
 			Name = model.Name,
 			StartDate = model.StartDate.ToUniversalTime(),
 			TargetEndDate = model.TargetEndDate.ToUniversalTime(),
+			CreatedBy = User.Identity.Name,
 			Slug = slug
 		};
 
