@@ -70,7 +70,7 @@ public class AccountController : Controller
 			return View(model);
 		}
 
-
+		await userManager.AddToRoleAsync(user, "member");
 
 		await signInManager.SignInAsync(user, isPersistent: false);
 
