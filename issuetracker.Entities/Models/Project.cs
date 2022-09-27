@@ -25,7 +25,7 @@ public class Project
 	public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
 	[Required]
-	public AppUser CreatedBy { get; set; }
+	public string CreatedBy { get; set; }
 
 	public List<AppUser> AssignedTo { get; set; }
 
