@@ -4,9 +4,9 @@ public class EditRoleViewModel
 {
 	public EditRoleViewModel()
 	{
-		Users = new List<string>();
+		Users = new List<AssignedToUserViewModel>();
 	}
 	public string Id { get; set; }
 	public string Name { get; set; }
-	public List<string> Users { get; set; }
+	public List<AssignedToUserViewModel> Users { get; set; }
 }
