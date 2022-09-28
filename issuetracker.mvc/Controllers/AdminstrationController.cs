@@ -74,7 +74,13 @@ public class AdminstrationController : Controller
 		{
 			if (await userManager.IsInRoleAsync(user, role.Name))
 			{
-				model.Users.Add(user.Email);
+				AssignedToUserViewModel assignedToUserViewModel = new()
+				{
+					Email = user.Email,
+					Image = user.Image
+				};
+
+				model.Users.Add(assignedToUserViewModel);
 			}
 		}
 
@@ -161,7 +167,8 @@ public class AdminstrationController : Controller
 			EditUserInRoleViewModel editUserInRoleViewModel = new()
 			{
 				Email = user.Email,
-				UserId = user.Id
+				UserId = user.Id,
+				Image = user.Image
 			};
 
 			if (await userManager.IsInRoleAsync(user, role.Name))
