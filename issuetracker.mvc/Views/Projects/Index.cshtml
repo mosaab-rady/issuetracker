@@ -20,7 +20,7 @@
 		}
 		else
 		{
-			<div class="col-11 mt-5 mx-auto gap-5">
+			<div class="col-8 ms-md-5 gap-5">
 				<div class="row py-3">
 					<div class="col-3 fw-bold">Name</div>
 					<div class="col-3 fw-bold">Start Date</div>
@@ -34,9 +34,9 @@
 				style="color: black; text-decoration: none;">
 						<div class="projectRow row py-3 my-3 boxshadow rounded-3 border-start border-5 border-success">
 							<div class="col-3 h6">@proj.Name</div>
-							<div class="col-3">@proj.StartDate</div>
-							<div class="col-3">@proj.TargetEndDate</div>
-							<div class="col-3">@proj.ActualEndDate</div>
+							<div class="col-3">@proj.StartDate.ToShortDateString()</div>
+							<div class="col-3">@proj.TargetEndDate.ToShortDateString()</div>
+							<div class="col-3">@proj.ActualEndDate.ToShortDateString()</div>
 						</div>
 					</a>
 				}
