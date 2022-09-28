@@ -13,28 +13,26 @@
 	</div>
 
 	<div class="row">
-
-		<h5 class="text-primary fw-bold text-uppercase">
+		<h4 class="text-dark text-uppercase" style="letter-spacing: 2px;">
 			@Model.Name
-		</h5>
-
+		</h4>
 	</div>
 
 	<div class="row px-3 my-4">
 
-		<div class="col-6">
+		<div class="col-md-7">
 
 			<div class="container-fluid px-0">
 
 				<div class="row">
 					<div class="col-4">
-						<h6 class="text-muted">Start Date</h6>
+						<h6 class="text-success">Start Date</h6>
 					</div>
 					<div class="col-4">
-						<h6 class="text-muted">Target End Date</h6>
+						<h6 class="text-success">Target End Date</h6>
 					</div>
 					<div class="col-4">
-						<h6 class="text-muted">Actual End Date</h6>
+						<h6 class="text-success">Actual End Date</h6>
 					</div>
 				</div>
 
@@ -57,13 +55,13 @@
 				<div class="row">
 
 					<div class="col-4">
-						<h6 class="text-muted">
+						<h6 class="text-success">
 							Created on
 						</h6>
 					</div>
 
 					<div class="col-4">
-						<h6 class="text-muted">
+						<h6 class="text-success">
 							Created by
 						</h6>
 					</div>
@@ -85,15 +83,17 @@
 
 		</div>
 
-		<div class="col-4 ms-auto">
+		<div class="col-md-4 ms-auto">
 
 			<div class="container-fluid px-0">
+
 				<div class="row">
-					<div class="col">
-						<h6 class="text-muted">
+					<div class="col px-0">
+						<h6 class="text-success">
 							Assigned To
 						</h6>
 					</div>
+
 				</div>
 
 				<div class="row">
@@ -107,31 +107,15 @@
 					else
 					{
 						<div class="col">
-							<div class="row">
-								<div class="col-4">
-									<p class="text-muted">
-										Name
-									</p>
-								</div>
-								<div class="col-4">
-									<p class="text-muted">
-										Email
-									</p>
-								</div>
-								<div class="col-4">
-									<p class="text-muted">
-										Roles
-									</p>
-								</div>
-							</div>
 
 							@foreach (var user in Model.AssignedTo)
 							{
-								<div class="row">
-									<div class="col-4">
-										@user.Name
-									</div>
-									<div class="col-4">
+								<div class="row my-2 py-2 align-items-center border-start border-5 
+								border-info rounded-3 boxshadow">
+
+									<div class="col-8">
+										<img src="/img/@user.Image" class="img-fluid rounded-circle boxshadow me-2" width="35px" height="35px"
+									alt="">
 										@user.Email
 									</div>
 									<div class="col-4">
@@ -144,10 +128,16 @@
 							}
 						</div>
 					}
-
-
-
 				</div>
+
+				<div class="row mt-3">
+					<div class="col px-0">
+						<a asp-action="editusersinproject" asp-controller="projects" asp-route-projectId="@Model.Id"
+							class="btn btn-dark btn-sm">Add or Remove users</a>
+					</div>
+				</div>
+
+
 			</div>
 
 
