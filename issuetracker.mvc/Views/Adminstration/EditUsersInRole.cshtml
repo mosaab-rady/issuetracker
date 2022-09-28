@@ -17,7 +17,11 @@
 								<input type="hidden" asp-for="@Model[i].UserId">
 								<input type="hidden" asp-for="@Model[i].Email">
 								<input asp-for="@Model[i].IsSelected">
-								<label asp-for="@Model[i].IsSelected">@Model[i].Email</label>
+								<label asp-for="@Model[i].IsSelected">
+									<img src="/img/@Model[i].Image" width="30px" height="30px"
+									class="img-fluid rounded-circle boxshadow mx-3" alt="">
+									@Model[i].Email
+								</label>
 							</div>
 						}
 					</div>

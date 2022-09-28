@@ -43,9 +43,12 @@
 						{
 							foreach (var user in Model.Users)
 							{
-								<li>
-									@user
-								</li>
+
+								<div class="d-flex align-items-center my-3">
+									<img src="/img/@user.Image" width="30px" height="30px" class="img-fluid rounded-circle boxshadow me-3"
+								alt="">
+									<h6>@user.Email</h6>
+								</div>
 							}
 						}
 					</div>
