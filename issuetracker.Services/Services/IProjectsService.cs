@@ -10,4 +10,7 @@ public interface IProjectsService
 	Task CreateProjectAsync(Project project);
 	Task UpdateProjectByIdAsync(Guid id, Project project);
 	Task DeleteProjectByIdAsync(Guid id);
+
+	Task AssignUser(AppUser user, Guid projectId);
+	Task UnAssignUser(AppUser user, Guid projectId);
 }

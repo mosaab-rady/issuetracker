@@ -13,8 +13,19 @@ public class ProjectsService : IProjectsService
 		this.context = context;
 	}
 
+	public async Task AssignUser(AppUser user, Guid projectId)
+	{
+		var project = await context.Projects.FindAsync(projectId);
+		project.AssignedTo.Add(user);
+		await context.SaveChangesAsync();
+	}
 
-
+	public async Task UnAssignUser(AppUser user, Guid projectId)
+	{
+		var project = await context.Projects.FindAsync(projectId);
+		project.AssignedTo.Remove(user);
+		await context.SaveChangesAsync();
+	}
 
 	public async Task CreateProjectAsync(Project project)
 	{
@@ -45,7 +56,7 @@ public class ProjectsService : IProjectsService
 
 	public async Task<Project> GetProjectByIdAsync(Guid id)
 	{
-		var project = await context.Projects.FindAsync(id);
+		var project = await context.Projects.Include(x => x.AssignedTo).Include(x => x.Issues).SingleOrDefaultAsync(x => x.Id == id);
 		return project;
 	}
 
