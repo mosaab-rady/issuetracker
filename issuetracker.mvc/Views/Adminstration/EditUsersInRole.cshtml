@@ -6,10 +6,10 @@
 
 <div class="container-fluid my-3">
 	<div class="row">
-		<div class="col-md-5 ms-5">
+		<div class="col-md-5 ms-md-4">
 			<form asp-action="editusersinrole" asp-controller="adminstration" asp-route-roleId="@roleId" method="post">
 				<div class="card">
-					<div class="card-header bg-dark text-light">Add or Remove user to This role</div>
+					<div class="card-header bg-primary text-light">Add or Remove user to This role</div>
 					<div class="card-body">
 						@for (int i = 0; i < Model.Count; i++)
 						{
