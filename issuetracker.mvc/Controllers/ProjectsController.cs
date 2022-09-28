@@ -4,6 +4,7 @@ using issuetracker.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Slugify;
 
 namespace issuetracker.mvc.Controllers;
@@ -32,6 +33,12 @@ public class ProjectsController : Controller
 	public async Task<IActionResult> Project(string id)
 	{
 		Project project = await projectsService.GetOneProjectAsync(slug: id);
+
+		if (project == null)
+		{
+			ViewBag.Error = $"No Project found with that name {id}.";
+			return View("NotFound");
+		}
 
 		List<Issue> unAssignedIssues = new();
 		List<Issue> overDueIssues = new();
@@ -134,6 +141,86 @@ public class ProjectsController : Controller
 		return RedirectToAction("index", "projects");
 	}
 
+
+
+
+	[HttpGet]
+	public async Task<IActionResult> EditUsersInProject(string projectId)
+	{
+
+		var project = await projectsService.GetProjectByIdAsync(Guid.Parse(projectId));
+
+		if (project == null)
+		{
+			ViewBag.Error = $"No Project found with that Id {projectId}";
+			return View("NotFound");
+		}
+
+		ViewBag.projectId = projectId;
+		ViewBag.projectSlug = project.Slug;
+
+
+		List<EditUserInProjectViewModel> model = new();
+
+
+		foreach (var user in await userManager.Users.ToListAsync())
+		{
+			EditUserInProjectViewModel editUserInProjectViewModel = new()
+			{
+				UserId = user.Id,
+				Email = user.Email,
+				Image = user.Image,
+				Roles = (await userManager.GetRolesAsync(user)).ToList()
+			};
+
+			if (project.AssignedTo.Contains(user))
+			{
+				editUserInProjectViewModel.IsSelected = true;
+			}
+			else
+			{
+				editUserInProjectViewModel.IsSelected = false;
+			}
+
+			model.Add(editUserInProjectViewModel);
+		}
+
+		return View(model);
+	}
+
+
+	[HttpPost]
+	public async Task<IActionResult> EditUsersInProject(List<EditUserInProjectViewModel> model, string projectId)
+	{
+
+		if (!ModelState.IsValid) return View(model);
+
+
+		var project = await projectsService.GetProjectByIdAsync(Guid.Parse(projectId));
+
+		if (project == null)
+		{
+			ViewBag.Error = $"No Project found with that Id {projectId}";
+			return View("NotFound");
+		}
+
+
+		foreach (EditUserInProjectViewModel editUserInProjectViewModel in model)
+		{
+			var user = await userManager.FindByIdAsync(editUserInProjectViewModel.UserId);
+
+			if (editUserInProjectViewModel.IsSelected && !(project.AssignedTo.Contains(user)))
+			{
+				await projectsService.AssignUser(user, project.Id);
+			}
+			else if (!editUserInProjectViewModel.IsSelected && project.AssignedTo.Contains(user))
+			{
+				await projectsService.UnAssignUser(user, project.Id);
+			}
+		}
+
+		return RedirectToAction("project", "projects", new { id = project.Slug });
+	}
 
 
 	private string Slugify(string name)
