@@ -29,6 +29,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 
 builder.Services.AddTransient<IProjectsService, ProjectsService>();
+builder.Services.AddTransient<IIssuesService, IssuesService>();
+builder.Services.AddTransient<ITagsServices, TagsService>();
 
 var app = builder.Build();
 
