@@ -1,9 +1,9 @@
 @inject SignInManager<AppUser> signInManager;
 
-<div class="border-2 border-end" id="sidenvContainer" style="padding: 0 1rem;">
+<div class="border-2 border-end" id="sidenvContainer">
 @if(signInManager.IsSignedIn(User))
 {
-	<div id="mySidenav" class="sidenav text-center ps-4 pe-2" style="position: sticky; left: 0; top: 3.3rem;">
+	<div id="mySidenav" class="sidenav text-center ps-3 pe-1" style="position: sticky; left: 0; top: 3.3rem;">
 
 		<div class="mt-3 text-start">
 			<a href="" class="btn btn-outline-danger rounded-3">Create New Issue</a>
