@@ -41,7 +41,7 @@ public class IssuesService : IIssuesService
 
 	public async Task<IEnumerable<Issue>> GetAllIssuesAsync()
 	{
-		var issues = await context.Issues.ToListAsync();
+		var issues = await context.Issues.Include(x => x.Priority).Include(x => x.Project).ToListAsync();
 		return issues;
 	}
 
@@ -49,6 +49,8 @@ public class IssuesService : IIssuesService
 	{
 		var issue = await context.Issues.Include(x => x.AssignedTo)
 			.Include(x => x.Project)
+			.Include(x => x.Priority)
+			.Include(x => x.Tags)
 			.SingleOrDefaultAsync(x => x.Id == id);
 
 		return issue;
