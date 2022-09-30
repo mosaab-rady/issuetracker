@@ -2,7 +2,9 @@ using issuetracker.Entities;
 using issuetracker.Services;
 using issuetracker.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace issuetracker.mvc.Controllers;
 
@@ -12,26 +14,88 @@ public class IssuesController : Controller
 	private readonly IIssuesService issuesService;
 	private readonly IProjectsService projectsService;
 	private readonly ITagsServices tagsServices;
+	private readonly UserManager<AppUser> userManager;
 
-	public IssuesController(IIssuesService issuesService, IProjectsService projectsService, ITagsServices tagsServices)
+	public IssuesController(IIssuesService issuesService, IProjectsService projectsService, ITagsServices tagsServices, UserManager<AppUser> userManager)
 	{
 		this.issuesService = issuesService;
 		this.projectsService = projectsService;
 		this.tagsServices = tagsServices;
+		this.userManager = userManager;
 	}
 
 	[HttpGet]
 	public async Task<IActionResult> Index()
 	{
-		var issues = await issuesService.GetAllIssuesAsync();
-		return View(issues);
+		List<IssueViewModel> model = new();
+
+
+		foreach (var issue in await issuesService.GetAllIssuesAsync())
+		{
+			var s = Enum.GetName(typeof(Status), issue.Status);
+			issue.Priority = new Priority();
+			string pr = issue.Priority.Name ?? "Not set";
+
+			IssueViewModel issueViewModel = new()
+			{
+				IssueId = issue.Id.ToString(),
+				Priority = pr,
+				Status = s,
+				ProjectName = issue.Project.Name,
+				Title = issue.Title
+			};
+
+
+			model.Add(issueViewModel);
+		}
+		return View(model);
 	}
 
 	[HttpGet]
 	public async Task<IActionResult> Issue(string id)
 	{
+
 		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
-		return View(issue);
+
+		if (issue == null)
+		{
+			ViewBag.Error = $"No Issue found with that ID {id}.";
+			return View("NotFound");
+		}
+
+		IssueDetailViewModel model = new()
+		{
+			IssueId = issue.Id.ToString(),
+			Title = issue.Title,
+			Description = issue.Description,
+			CreatedBy = issue.CreatedBy,
+			CreatedOn = issue.CreatedOn,
+			TargetResolutionDate = issue.TargetResolutionDate,
+			ActualResolutionDate = issue.ActualResolutionDate,
+			ProjectName = issue.Project.Name,
+			Status = Enum.GetName(typeof(Status), issue.Status),
+			Priority = issue.Priority ?? new Priority() { Color = "primary", Name = "Not Set" },
+			ResolutionSummary = issue.ResoliotionSummary,
+			Tags = issue.Tags
+		};
+
+		foreach (var user in issue.AssignedTo)
+		{
+			var roles = await userManager.GetRolesAsync(user);
+			AssignedToUserViewModel assignedToUserViewModel = new()
+			{
+				Id = user.Id,
+				Email = user.Email,
+				Image = user.Image,
+				Name = $"{user.FirstName} {user.LastName}",
+				Roles = roles.ToList()
+			};
+			model.AssignedTo.Add(assignedToUserViewModel);
+		}
+
+
+
+		return View(model);
 	}
 
 	[HttpGet]
@@ -54,6 +118,7 @@ public class IssuesController : Controller
 		{
 			AssignTagViewModel assignTagViewModel = new()
 			{
+				TagId = tag.Id.ToString(),
 				Name = tag.Name,
 				Color = tag.Color
 			};
@@ -86,16 +151,39 @@ public class IssuesController : Controller
 			return View(model);
 		}
 
+		var user = await userManager.Users.Include(x => x.AssignedProjects).SingleOrDefaultAsync(x => x.Email == User.Identity.Name);
+
+		if (!user.AssignedProjects.Contains(project))
+		{
+			ModelState.AddModelError("ProjectId", "sorry, you cant create issue in this project. you can only create issue in projects you are assigned to.");
+			return View(model);
+		}
+
 		issue.Project = project;
 
 
+
+		// if the user create new tag
+		if (model.CreateTagViewModel != null)
+		{
+			Tag newTag = new()
+			{
+				Name = model.CreateTagViewModel.Name,
+				Color = model.CreateTagViewModel.Color
+			};
+			newTag = await tagsServices.CreateTagAsync(newTag);
+			issue.Tags.Add(newTag);
+		}
+
+
+		// if the user selected from existings tags
 		foreach (var tag in model.Tags)
 		{
 			var _tag = await tagsServices.GetTagByIdAsync(Guid.Parse(tag.TagId));
 			if (_tag == null)
 			{
-				ModelState.AddModelError("", $"No tag with that name {tag.Name}");
-				return View(model);
+				ViewBag.Error = $"No Tag found with this ID {tag.TagId}.";
+				return View("NotFound");
 			}
 
 			if (tag.IsSelected)
