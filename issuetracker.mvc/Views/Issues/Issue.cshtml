@@ -1,0 +1,198 @@
+@model IssueDetailViewModel
+@{
+	ViewData["Title"] = $"{Model.Title}";
+}
+
+<div class="container-fluid my-3">
+	<div class="row me-2">
+		<div class="col-8">
+			<h3 class="text-capitalize text-danger">@Model.Title Issue</h3>
+			<p>Project : @Model.ProjectName</p>
+		</div>
+		<div class="col-4 text-end">
+			<button class="btn btn-success">Close</button>
+			<button class="btn btn-outline-primary">Edit</button>
+			<button class="btn btn-danger">Delete</button>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-8">
+
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-3 text-success">
+						<h6>
+							Target Resolution
+						</h6>
+					</div>
+					<div class="col-4 text-success">
+						<h6>
+							Actual Resolution
+						</h6>
+					</div>
+					<div class="col-2 text-success">
+						<h6>Status</h6>
+					</div>
+					<div class="col-2 text-success">
+						<h6>Priority</h6>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-3">@Model.TargetResolutionDate.ToShortDateString()</div>
+					<div class="col-4">@Model.ActualResolutionDate.ToShortDateString()</div>
+					<div class="col-2">
+						<p class="@(Model.Status=="Closed" ? "bg-success" : "bg-danger") px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
+							style="width: fit-content;">
+							@Model.Status
+						</p>
+					</div>
+					<div class="col-2">
+						<p class="bg-@Model.Priority.Color px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
+							style="width: fit-content;">
+
+							@Model.Priority.Name
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="container-fluid mt-4">
+				<div class="row">
+					<div class="col-3 text-success">
+						<h6>Created on</h6>
+					</div>
+					<div class="col-4 text-success">
+						<h6>Created by</h6>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-3">@Model.CreatedOn.ToShortDateString()</div>
+					<div class="col-4">@Model.CreatedBy</div>
+				</div>
+			</div>
+
+
+			<div class="container-fluid mt-5">
+				<div class="row">
+					<div class="col text-success">
+						<h6>Description</h6>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">@Model.Description</div>
+				</div>
+			</div>
+
+
+			<div class="container-fluid mt-4">
+				<div class="row mb-4">
+					<div class="col text-success">
+						<h6>Tags</h6>
+					</div>
+				</div>
+
+				<div class="w-25 d-flex flex-wrap gap-3">
+					@if (Model.Tags.Count > 0)
+					{
+						foreach (var tag in Model.Tags)
+						{
+							<div class="">
+								<p class="boxshadow px-3 py-1 my-0 rounded-pill" style="background-color: @tag.Color; width:fit-content;">
+									@tag.Name</p>
+							</div>
+						}
+					}
+					else
+					{
+						<div>
+							No tags selected
+						</div>
+					}
+				</div>
+			</div>
+
+			@if (Model.ResolutionSummary != null)
+			{
+				<div class="container-fluid mt-4">
+					<div class="row">
+						<div class="col text-success">
+							Resolution summary
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">@Model.ResolutionSummary</div>
+					</div>
+				</div>
+			}
+
+
+		</div>
+
+
+
+		@* users *@
+		<div class="col-md-4 ms-auto">
+			<div class="container-fluid px-0">
+
+				<div class="row">
+					<div class="col px-0">
+						<h6 class="text-success">
+							Assigned To
+						</h6>
+					</div>
+
+				</div>
+
+				<div class="row">
+
+					@if (Model.AssignedTo.Count() == 0)
+					{
+						<div class="col">
+							<p>No Users yet</p>
+						</div>
+					}
+					else
+					{
+						<div class="col">
+
+							@foreach (var user in Model.AssignedTo)
+							{
+								<div class="row my-2 py-2 align-items-center border-start border-5 
+								border-info rounded-3 boxshadow">
+
+									<div class="col-8 d-flex align-items-center">
+										<img src="/img/@user.Image" class="rounded-circle boxshadow me-3" width="35px" height="35px" alt="">
+										<div>
+											<p class="my-0 fw-bold">
+												@user.Name
+											</p>
+											<p class="my-0">
+												@user.Email
+											</p>
+										</div>
+									</div>
+									<div class="col-4">
+										@foreach (var role in user.Roles)
+										{
+											<li>@role</li>
+										}
+									</div>
+								</div>
+							}
+						</div>
+					}
+				</div>
+
+				<div class="row mt-3">
+					<div class="col px-0">
+						<a asp-action="editusersinissue" asp-controller="issues" asp-route-issueId="@Model.IssueId"
+							class="btn btn-dark btn-sm">Add or Remove users</a>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+</div>
