@@ -1,0 +1,51 @@
+@model List<IssueViewModel>
+@{
+	ViewData["Title"] = "Issues";
+}
+
+<div class="container-fluid my-3">
+
+	@* Row for filters *@
+	<div class="row"></div>
+
+
+	<div class="row">
+		<div class="col-md-8 ms-md-5">
+			<div class="row mb-4">
+				<div class="col-4 fw-bold">Title</div>
+				<div class="col-4 fw-bold">Project</div>
+				<div class="col-2 fw-bold">Status</div>
+				<div class="col-2 fw-bold">Priority</div>
+			</div>
+			@if (Model.Count() == 0)
+			{
+				<div class="row">
+					<div class="col text-center">
+						<h4>No Issues yet</h4>
+					</div>
+				</div>
+			}
+			else
+			{
+				foreach (var issue in Model)
+				{
+					<a asp-action="issue" asp-controller="issues" asp-route-id="@issue.IssueId"
+				class="text-dark text-decoration-none">
+						<div class="row projectRow py-3 boxshadow my-3 border-start border-5 rounded-3 
+				@(issue.Status=="Closed" ? "border-success" : "border-danger")">
+							<div class="col-4 fw-bold">@issue.Title</div>
+							<div class="col-4">@issue.ProjectName</div>
+							<div class="col-2">
+								@issue.Status
+							</div>
+							<div class="col-2">@issue.Priority</div>
+						</div>
+					</a>
+				}
+
+			}
+		</div>
+	</div>
+
+
+</div>
