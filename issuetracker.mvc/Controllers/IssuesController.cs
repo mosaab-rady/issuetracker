@@ -110,4 +110,95 @@ public class IssuesController : Controller
 		return RedirectToAction("index", "issues");
 	}
 
+
+	[HttpGet]
+	public async Task<IActionResult> EditUsersInIssue(string issueId)
+	{
+		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(issueId));
+
+		if (issue == null)
+		{
+			ViewBag.Error = $"No Issue found with this ID {issueId}.";
+			return View("NotFound");
+		}
+
+		ViewBag.issueId = issue.Id;
+
+
+
+		List<EditUserInIssueViewModel> model = new();
+
+		var project = issue.Project;
+
+		foreach (var user in await userManager.Users.Include(x => x.AssignedProjects).ToListAsync())
+		{
+			if (user.AssignedProjects.Contains(project))
+			{
+				EditUserInIssueViewModel editUserInIssueViewModel = new()
+				{
+					UserId = user.Id,
+					Email = user.Email,
+					Image = user.Image,
+					Roles = (await userManager.GetRolesAsync(user)).ToList()
+				};
+
+				if (issue.AssignedTo.Contains(user))
+				{
+					editUserInIssueViewModel.IsSelected = true;
+				}
+				else
+				{
+					editUserInIssueViewModel.IsSelected = false;
+				}
+
+				model.Add(editUserInIssueViewModel);
+			}
+		}
+
+		return View(model);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> EditUsersInIssue(List<EditUserInIssueViewModel> model, string issueId)
+	{
+		if (!ModelState.IsValid) return View(model);
+
+		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(issueId));
+
+		if (issue == null)
+		{
+			ViewBag.Error = $"No Issue found with this ID {issueId}.";
+			return View("NotFound");
+		}
+
+
+		var project = issue.Project;
+
+		foreach (EditUserInIssueViewModel editUserInIssueViewModel in model)
+		{
+			var user = await userManager.Users.Include(x => x.AssignedProjects).SingleOrDefaultAsync(x => x.Id == editUserInIssueViewModel.UserId);
+
+			if (user.AssignedProjects.Contains(project))
+			{
+
+				if (editUserInIssueViewModel.IsSelected && !(issue.AssignedTo.Contains(user)))
+				{
+					await issuesService.AssignUser(user, issue.Id);
+				}
+				else if (!editUserInIssueViewModel.IsSelected && issue.AssignedTo.Contains(user))
+				{
+					await issuesService.UnAssignUser(user, issue.Id);
+				}
+
+			}
+			else
+			{
+				ModelState.AddModelError("", "The user you selected is not assigned to this project.");
+				return View(model);
+			}
+		}
+
+		return RedirectToAction("issue", "issues", new { id = issue.Id });
+
+	}
 }
