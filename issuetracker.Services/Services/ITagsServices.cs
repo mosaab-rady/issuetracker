@@ -6,7 +6,7 @@ public interface ITagsServices
 {
 	Task<IEnumerable<Tag>> GetAllTagsAsync();
 	Task<Tag> GetTagByIdAsync(Guid id);
-	Task CreateTagAsync(Tag tag);
+	Task<Tag> CreateTagAsync(Tag tag);
 	Task UpdateTagByIdAsync(Guid id, Tag tag);
 	Task DeleteTagByIdAsync(Guid id);
 }

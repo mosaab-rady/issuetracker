@@ -13,10 +13,11 @@ public class TagsService : ITagsServices
 		this.context = context;
 	}
 
-	public async Task CreateTagAsync(Tag tag)
+	public async Task<Tag> CreateTagAsync(Tag tag)
 	{
 		await context.Tags.AddAsync(tag);
 		await context.SaveChangesAsync();
+		return tag;
 	}
 
 	public async Task DeleteTagByIdAsync(Guid id)
