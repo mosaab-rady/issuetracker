@@ -48,7 +48,7 @@ public class ProjectsService : IProjectsService
 
 	public async Task<Project> GetOneProjectAsync(string slug)
 	{
-		var project = await context.Projects.Include(x => x.Issues)
+		var project = await context.Projects.Include(x => x.Issues).ThenInclude(issue => issue.AssignedTo)
 			.Include(x => x.AssignedTo)
 			.SingleOrDefaultAsync(e => e.Slug == slug);
 		return project;
