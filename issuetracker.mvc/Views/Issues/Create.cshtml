@@ -1,0 +1,94 @@
+@model CreateIssueViewModel
+@{
+	ViewData["Title"] = "Create New Issue";
+}
+
+<div class="container-fluid my-3">
+	<div class="row">
+		<div class="col-md-8 mx-auto p-4 rounded-3 boxshadow">
+			<form asp-action="create" asp-controller="issues" method="post">
+				<legend class="text-dark mb-4">Create New Issue</legend>
+
+
+				<div class="text-danger" asp-validation-summary="All"></div>
+
+				<div class="form-group my-3">
+					<label asp-for="ProjectId" class="form-label">Project</label>
+					<input class="form-control" asp-for="ProjectId" list="datalistOptions" id="exampleDataList">
+					<datalist id="datalistOptions">
+						@foreach (var project in Model.projects)
+						{
+							<option value="@project.Id">@project.Name</option>
+						}
+					</datalist>
+					<span class="text-danger" asp-validation-for="ProjectId"></span>
+				</div>
+
+				<div class="form-group my-3">
+					<label asp-for="Title" class="form-label text-muted fw-bold"></label>
+					<input asp-for="Title" class="form-control">
+					<span class="text-danger" asp-validation-for="Title"></span>
+				</div>
+
+				<div class="form-group my-3">
+					<label asp-for="Description" class="form-label text-muted fw-bold"></label>
+					<textarea asp-for="Description" class="form-control" rows="7"></textarea>
+					<span class="text-danger" asp-validation-for="Description"></span>
+				</div>
+
+
+				<div id="createTagContainer" class="border p-4 mt-2 justify-content-between w-50" style="display: none;">
+					<div class="form-group my-3">
+						<label asp-for="CreateTagViewModel.Color" class="form-label text-muted fw-bold"></label>
+						<input type="color" asp-for="CreateTagViewModel.Color" class="form-control form-control-color">
+					</div>
+					<div class="from-group my-3">
+						<label asp-for="CreateTagViewModel.Name" class="form-label text-muted fw-bold"></label>
+						<input class="form-control" asp-for="CreateTagViewModel.Name">
+					</div>
+				</div>
+
+
+				<div class="form-group my-3">
+					<label asp-for="Tags" class="form-label text-muted fw-bold"></label>
+					<button type="button" class="btn btn-sm btn-outline-primary ms-5" onclick="NewTag()">New Tag</button>
+
+					<div class="row mt-3 w-50">
+						@for (int i = 0; i < Model.Tags.Count; i++)
+						{
+							<div class="col-4 my-2">
+								<input type="hidden" asp-for="@Model.Tags[i].TagId">
+								<input asp-for="@Model.Tags[i].IsSelected">
+								<label asp-for="@Model.Tags[i].IsSelected">
+									<p class="my-0 rounded-pill px-3 py-1 text-lowercase"
+									style="width: fit-content; background-color: @Model.Tags[i].Color;">
+										@Model.Tags[i].Name</p>
+								</label>
+							</div>
+						}
+					</div>
+				</div>
+
+				<div class="form-group text-end my-3">
+					<input type="submit" value="Create" class="btn btn-dark">
+				</div>
+
+
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+<script>
+	function NewTag() {
+		document.getElementById("createTagContainer").style.display = "flex"
+	}
+</script>
