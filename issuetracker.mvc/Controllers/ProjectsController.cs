@@ -70,13 +70,13 @@ public class ProjectsController : Controller
 		}
 
 
-		List<AssignedToUserViewModel> assignedToUserViewModels = new();
+		List<AssignUserViewModel> assignedToUserViewModels = new();
 
 		foreach (var user in project.AssignedTo)
 		{
 			var roles = await userManager.GetRolesAsync(user);
 
-			AssignedToUserViewModel assignedToUserViewModel = new()
+			AssignUserViewModel assignedToUserViewModel = new()
 			{
 				Email = user.Email,
 				Name = $"{user.FirstName} {user.LastName}",
