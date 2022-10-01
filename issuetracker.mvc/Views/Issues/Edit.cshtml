@@ -1,0 +1,140 @@
+@model EditIssueViewModel
+@{
+	ViewData["Title"] = "Edit Issue";
+}
+
+<div class="container-fluid my-3">
+	<div class="row mx-md-3">
+		<div class="col-md-8">
+			<form asp-action="Edit" asp-controller="issues" asp-route-id="@Model.IssueId" method="post">
+				<legend class="text-primary">Edit @Model.Title</legend>
+				<div class="form-floating my-3">
+					<input asp-for="IssueId" hidden>
+					<input asp-for="IssueId" disabled class="form-control bg-primary">
+					<label asp-for="IssueId" class="form-label text-dark fw-bold"></label>
+					<span class="text-danger" asp-validation-for="IssueId"></span>
+				</div>
+
+				<div class="form-group my-3">
+					<label asp-for="Title" class="form-label text-muted fw-bold"></label>
+					<input asp-for="Title" class="form-control">
+					<span class="text-danger" asp-validation-for="Title"></span>
+				</div>
+
+				<div class="form-group my-3">
+					<label asp-for="Description" class="form-label text-muted fw-bold"></label>
+					<textarea asp-for="Description" rows="8" class="form-control"></textarea>
+					<span class="text-danger" asp-validation-for="Description"></span>
+				</div>
+
+
+
+				<div class="form-group my-3">
+					<label asp-for="TargetResolutionDate" class="form-label text-muted fw-bold"></label>
+					<input asp-for="TargetResolutionDate" class="form-control">
+					<span class="text-danger" asp-validation-for="TargetResolutionDate"></span>
+				</div>
+
+
+
+
+
+				<div id="CreatePriorityContainer" class="border p-4 mt-2 justify-content-between w-50" style="display: none;">
+					<div class="from-group my-3">
+						<label asp-for="CreatePriorityViewModel.Name" class="form-label text-muted fw-bold"></label>
+						<input class="form-control" asp-for="CreatePriorityViewModel.Name">
+					</div>
+					<div class="form-group my-3">
+						<label asp-for="CreatePriorityViewModel.Color" class="form-label text-muted fw-bold"></label>
+						<input type="color" asp-for="CreatePriorityViewModel.Color" class="form-control form-control-color">
+					</div>
+				</div>
+
+
+				<div class="form-group my-3 mt-5">
+					<label asp-for="PriorityId" class="form-label text-muted fw-bold">Priority</label>
+					<a class="btn btn-sm btn-outline-primary ms-5" onclick="NewPriority()">New Priority</a>
+					@for (int i = 0; i < Model.Priorities.Count; i++)
+					{
+						<div class="form-check my-2">
+							<input class="form-check-input" type="radio" asp-for="@Model.PriorityId" value="@Model.Priorities[i].Id"
+							id="@Model.Priorities[i].Id">
+							<label class="form-check-label" for="@Model.Priorities[i].Id">
+								<p class="my-0 rounded-pill px-3 py-1 text-lowercase"
+								style="width: fit-content; background-color: @Model.Priorities[i].Color;">
+									@Model.Priorities[i].Name</p>
+							</label>
+						</div>
+					}
+				</div>
+
+
+
+
+				<div id="createTagContainer" class="border p-4 mt-2 justify-content-between w-50" style="display: none;">
+					<div class="from-group my-3">
+						<label asp-for="CreateTagViewModel.Name" class="form-label text-muted fw-bold"></label>
+						<input class="form-control" asp-for="CreateTagViewModel.Name">
+					</div>
+					<div class="form-group my-3">
+						<label asp-for="CreateTagViewModel.Color" class="form-label text-muted fw-bold"></label>
+						<input type="color" asp-for="CreateTagViewModel.Color" class="form-control form-control-color">
+					</div>
+				</div>
+
+				<div class="form-group my-3 mt-5">
+					<label asp-for="Tags" class="form-label text-muted fw-bold"></label>
+					<a class="btn btn-sm btn-outline-primary ms-5" onclick="NewTag()">New Tag</a>
+
+					<div class="row mt-3 w-50">
+						@for (int i = 0; i < Model.Tags.Count; i++)
+						{
+							<div class="col-4 my-2">
+								<input type="hidden" asp-for="@Model.Tags[i].TagId">
+								<input asp-for="@Model.Tags[i].IsSelected">
+								<label asp-for="@Model.Tags[i].IsSelected">
+									<p class="my-0 rounded-pill px-3 py-1 text-lowercase"
+									style="width: fit-content; background-color: @Model.Tags[i].Color;">
+										@Model.Tags[i].Name</p>
+								</label>
+							</div>
+						}
+					</div>
+				</div>
+
+
+				<div class="form-group my-3">
+					<label asp-for="ResolutionSummary" class="form-label text-muted fw-bold"></label>
+					<textarea asp-for="ResolutionSummary" rows="8" class="form-control"></textarea>
+					<span class="text-danger" asp-validation-for="ResolutionSummary"></span>
+				</div>
+
+
+
+				<div class="form-group my-3 text-end">
+					<input type="submit" value="Edit" class="btn btn-outline-success">
+					<a asp-action="issue" asp-controller="issues" asp-route-id="@Model.IssueId" class="btn btn-primary">cancel</a>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+<script>
+	function NewTag() {
+		document.getElementById("createTagContainer").style.display = "flex";
+	}
+
+	function NewPriority() {
+		document.getElementById("CreatePriorityContainer").style.display = "flex";
+	}
+</script>
