@@ -14,14 +14,16 @@ public class IssuesController : Controller
 	private readonly IIssuesService issuesService;
 	private readonly IProjectsService projectsService;
 	private readonly ITagsServices tagsServices;
+	private readonly IPriorityService priorityService;
 	private readonly UserManager<AppUser> userManager;
 
-	public IssuesController(IIssuesService issuesService, IProjectsService projectsService, ITagsServices tagsServices, UserManager<AppUser> userManager)
+	public IssuesController(IIssuesService issuesService, IProjectsService projectsService, ITagsServices tagsServices, UserManager<AppUser> userManager, IPriorityService priorityService)
 	{
 		this.issuesService = issuesService;
 		this.projectsService = projectsService;
 		this.tagsServices = tagsServices;
 		this.userManager = userManager;
+		this.priorityService = priorityService;
 	}
 
 	[HttpGet]
@@ -32,17 +34,15 @@ public class IssuesController : Controller
 
 		foreach (var issue in await issuesService.GetAllIssuesAsync())
 		{
-			var s = Enum.GetName(typeof(Status), issue.Status);
-			issue.Priority = new Priority();
-			string pr = issue.Priority.Name ?? "Not set";
+
 
 			IssueViewModel issueViewModel = new()
 			{
 				IssueId = issue.Id.ToString(),
-				Priority = pr,
-				Status = s,
+				Status = Enum.GetName(typeof(Status), issue.Status),
 				ProjectName = issue.Project.Name,
-				Title = issue.Title
+				Title = issue.Title,
+				Priority = issue.Priority ?? new Priority() { Color = "#6699ff", Name = "Not Set" }
 			};
 
 
@@ -74,7 +74,7 @@ public class IssuesController : Controller
 			ActualResolutionDate = issue.ActualResolutionDate,
 			ProjectName = issue.Project.Name,
 			Status = Enum.GetName(typeof(Status), issue.Status),
-			Priority = issue.Priority ?? new Priority() { Color = "primary", Name = "Not Set" },
+			Priority = issue.Priority ?? new Priority() { Color = "#6699ff", Name = "Not Set" },
 			ResolutionSummary = issue.ResoliotionSummary,
 			Tags = issue.Tags
 		};
@@ -82,7 +82,7 @@ public class IssuesController : Controller
 		foreach (var user in issue.AssignedTo)
 		{
 			var roles = await userManager.GetRolesAsync(user);
-			AssignedToUserViewModel assignedToUserViewModel = new()
+			AssignUserViewModel assignedToUserViewModel = new()
 			{
 				Id = user.Id,
 				Email = user.Email,
@@ -164,7 +164,7 @@ public class IssuesController : Controller
 
 
 		// if the user create new tag
-		if (model.CreateTagViewModel != null)
+		if (model.CreateTagViewModel.Name != null)
 		{
 			Tag newTag = new()
 			{
@@ -289,4 +289,190 @@ public class IssuesController : Controller
 		return RedirectToAction("issue", "issues", new { id = issue.Id });
 
 	}
+
+
+	[HttpPost]
+	public async Task<IActionResult> DeleteIssue(string id)
+	{
+		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+		if (issue == null)
+		{
+			ViewBag.Error = $"No Issue found with this ID {id}."; ;
+			return View("NotFound");
+		}
+
+		await issuesService.DeleteIssueAsync(issue.Id);
+
+		return RedirectToAction("index", "issues");
+	}
+
+
+	[HttpGet]
+	public async Task<IActionResult> CloseIssue(string id)
+	{
+		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+		if (issue == null)
+		{
+			ViewBag.Error = $"No Issue found with this ID {id}";
+			return View("NotFound");
+		}
+
+
+		CloseIssueViewModel closeIssueViewModel = new()
+		{
+			IssueId = issue.Id.ToString(),
+			Title = issue.Title
+		};
+
+
+		return View(closeIssueViewModel);
+	}
+
+
+	[HttpPost]
+	public async Task<IActionResult> CloseIssue(CloseIssueViewModel model, string id)
+	{
+		if (!ModelState.IsValid) return View(model);
+
+		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+		if (issue == null)
+		{
+			ViewBag.Error = $"No Issue found with this ID {id}";
+			return View("NotFound");
+		}
+
+
+		issue.ResoliotionSummary = model.ResolutionSummary;
+		issue.Status = Status.Closed;
+		issue.ActualResolutionDate = DateTime.UtcNow;
+
+		await issuesService.UpdateIssueByIdAsync(issue.Id, issue);
+
+		return RedirectToAction("issue", "issues", new { id = issue.Id });
+	}
+
+
+	[HttpGet]
+	public async Task<IActionResult> Edit(string id)
+	{
+		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+		if (issue == null)
+		{
+			ViewBag.Error = $"No Issue found with this ID {id}.";
+			return View("NotFound");
+		}
+
+		EditIssueViewModel editIssueViewModel = new()
+		{
+			IssueId = issue.Id.ToString(),
+			Title = issue.Title,
+			Description = issue.Description,
+			TargetResolutionDate = issue.TargetResolutionDate,
+			Priorities = (await priorityService.GetAllPrioritiesAsync()).ToList()
+		};
+
+		foreach (var tag in await tagsServices.GetAllTagsAsync())
+		{
+			AssignTagViewModel assignTagViewModel = new()
+			{
+				Name = tag.Name,
+				Color = tag.Color,
+				TagId = tag.Id.ToString()
+			};
+
+			if (issue.Tags.Contains(tag))
+			{
+				assignTagViewModel.IsSelected = true;
+			}
+			else
+			{
+				assignTagViewModel.IsSelected = false;
+			}
+
+			editIssueViewModel.Tags.Add(assignTagViewModel);
+		}
+
+		if (issue.Priority != null)
+		{
+			editIssueViewModel.PriorityId = issue.Priority.Id.ToString();
+		}
+
+
+		return View(editIssueViewModel);
+	}
+
+
+	[HttpPost]
+	public async Task<IActionResult> Edit(EditIssueViewModel model, string id)
+	{
+		if (!ModelState.IsValid) return View(model);
+
+		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+
+		if (issue == null)
+		{
+			ViewBag.Error = $"No Issue found with this ID {id}";
+			return View("NotFound");
+		}
+
+
+		issue.Title = model.Title;
+		issue.Description = model.Description;
+		issue.TargetResolutionDate = model.TargetResolutionDate.ToUniversalTime();
+
+		if (model.CreateTagViewModel.Name != null)
+		{
+			Tag newTag = new()
+			{
+				Name = model.CreateTagViewModel.Name,
+				Color = model.CreateTagViewModel.Color
+			};
+			newTag = await tagsServices.CreateTagAsync(newTag);
+			issue.Tags.Add(newTag);
+		}
+
+		foreach (var tag in model.Tags)
+		{
+			var _tag = await tagsServices.GetTagByIdAsync(Guid.Parse(tag.TagId));
+
+			if (tag.IsSelected && !issue.Tags.Contains(_tag))
+			{
+				issue.Tags.Add(_tag);
+			}
+			else if (!tag.IsSelected && issue.Tags.Contains(_tag))
+			{
+				issue.Tags.Remove(_tag);
+			}
+		}
+
+		if (model.CreatePriorityViewModel.Name != null)
+		{
+			Priority newPriority = new()
+			{
+				Name = model.CreatePriorityViewModel.Name,
+				Color = model.CreatePriorityViewModel.Color
+			};
+
+			newPriority = await priorityService.CreatePriorityAsync(newPriority);
+			issue.Priority = newPriority;
+		}
+		else
+		{
+			var priority = await priorityService.GetPriorityByIdAsync(Guid.Parse(model.PriorityId));
+			issue.Priority = priority;
+		}
+
+
+
+		await issuesService.UpdateIssueByIdAsync(issue.Id, issue);
+
+		return RedirectToAction("issue", "issues", new { id = issue.Id });
+	}
+
+
+
+
+
+
+
 }
