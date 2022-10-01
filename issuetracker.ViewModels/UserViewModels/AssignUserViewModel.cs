@@ -1,6 +1,6 @@
 namespace issuetracker.ViewModels;
 
-public class AssignedToUserViewModel
+public class AssignUserViewModel
 {
 	public string Id { get; set; }
 	public string Name { get; set; }
