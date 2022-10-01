@@ -15,5 +15,5 @@ public class ProjectDetailViewModel
 	public List<Issue> OverDueIssues { get; set; }
 	public List<Issue> OpenIssues { get; set; }
 	public List<Issue> ClosedIssue { get; set; }
-	public List<AssignedToUserViewModel> AssignedTo { get; set; }
+	public List<AssignUserViewModel> AssignedTo { get; set; }
 }
