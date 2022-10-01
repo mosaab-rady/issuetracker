@@ -9,10 +9,34 @@
 			<h3 class="text-capitalize text-danger">@Model.Title Issue</h3>
 			<p>Project : @Model.ProjectName</p>
 		</div>
-		<div class="col-4 text-end">
-			<button class="btn btn-success">Close</button>
-			<button class="btn btn-outline-primary">Edit</button>
-			<button class="btn btn-danger">Delete</button>
+		<div class="col-4 position-relative">
+			<div class="d-flex gap-1 justify-content-end">
+				@if (Model.Status == "Open")
+				{
+					<a asp-action="closeIssue" asp-controller="issues" asp-route-id="@Model.IssueId"
+					class="btn btn-success">Close</a>
+				}
+				else
+				{
+					<button disabled class="btn btn-success">Closed</button>
+				}
+				<a asp-action="Edit" asp-controller="issues" asp-route-id="@Model.IssueId"
+					class="btn btn-outline-primary">Edit</a>
+
+
+
+				<form asp-action="deleteissue" asp-controller="issues" asp-route-id="@Model.IssueId" method="post" class="">
+					<a onclick="confirmDeleteIssue()" class="btn btn-danger">Delete</a>
+
+					<div id="confirmDeleteIssueBox" class="gap-2 text-center bg-white boxshadow border p-2 rounded-3"
+						style="position: absolute; bottom: -20px; right: 0px; display: none;">
+						<p class="m-2">Are you sure you want to delete this issue?</p>
+						<button type="submit" class="btn btn-outline-danger btn-sm px-3">Yes</button>
+						<a class="btn btn-primary btn-sm px-3" onclick="cancelDeleteIssue()">No</a>
+					</div>
+
+				</form>
+			</div>
 		</div>
 	</div>
 
@@ -48,9 +72,8 @@
 						</p>
 					</div>
 					<div class="col-2">
-						<p class="bg-@Model.Priority.Color px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
-							style="width: fit-content;">
-
+						<p class="px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
+							style="width: fit-content; background-color: @Model.Priority.Color;">
 							@Model.Priority.Name
 						</p>
 					</div>
@@ -196,3 +219,14 @@
 		</div>
 	</div>
 </div>
+
+
+<script>
+	function confirmDeleteIssue() {
+		document.getElementById('confirmDeleteIssueBox').style.display = 'block';
+	}
+
+	function cancelDeleteIssue() {
+		document.getElementById('confirmDeleteIssueBox').style.display = 'none';
+	}
+</script>
