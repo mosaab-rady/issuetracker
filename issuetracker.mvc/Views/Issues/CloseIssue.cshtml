@@ -1,0 +1,36 @@
+@model CloseIssueViewModel
+@{
+	ViewData["Title"] = "Close Issue";
+}
+
+<div class="container-fluid my-3">
+	<div class="row ms-md-3">
+		<div class="col-md-6">
+
+			<form asp-action="CloseIssue" asp-controller="issues" asp-route-id="@Model.IssueId" method="post">
+				<legend class="text-success">Close @Model.Title</legend>
+				<div class="form-floating my-3">
+					<input asp-for="IssueId" hidden>
+					<input asp-for="Title" hidden>
+					<input asp-for="IssueId" disabled class="form-control bg-primary">
+					<label asp-for="IssueId" class="form-label text-dark fw-bold"></label>
+					<span class="text-danger" asp-validation-for="IssueId"></span>
+				</div>
+				<div class="form-group my-3">
+					<label asp-for="ResolutionSummary" class="form-label text-muted fw-bold"></label>
+					<textarea asp-for="ResolutionSummary" rows="5" class="form-control"></textarea>
+					<span class="text-danger" asp-validation-for="ResolutionSummary"></span>
+				</div>
+				<div class="form-group my-3 text-end">
+					<input type="submit" value="Close" class="btn btn-outline-success">
+					<a asp-action="issue" asp-controller="issues" asp-route-id="@Model.IssueId" class="btn btn-primary">Cancel</a>
+				</div>
+			</form>
+
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
