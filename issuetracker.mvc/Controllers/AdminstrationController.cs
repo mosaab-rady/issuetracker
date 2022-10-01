@@ -74,7 +74,7 @@ public class AdminstrationController : Controller
 		{
 			if (await userManager.IsInRoleAsync(user, role.Name))
 			{
-				AssignedToUserViewModel assignedToUserViewModel = new()
+				AssignUserViewModel assignedToUserViewModel = new()
 				{
 					Email = user.Email,
 					Image = user.Image
