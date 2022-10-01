@@ -9,8 +9,8 @@
 	<div class="row"></div>
 
 
-	<div class="row">
-		<div class="col-md-8 ms-md-5">
+	<div class="row mx-2">
+		<div class="col ms-md-4">
 			<div class="row mb-4">
 				<div class="col-4 fw-bold">Title</div>
 				<div class="col-4 fw-bold">Project</div>
@@ -36,9 +36,17 @@
 							<div class="col-4 fw-bold">@issue.Title</div>
 							<div class="col-4">@issue.ProjectName</div>
 							<div class="col-2">
-								@issue.Status
+								<p class="@(issue.Status=="Closed" ? "bg-success" : "bg-danger") px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
+							style="width: fit-content;">
+									@issue.Status
+								</p>
 							</div>
-							<div class="col-2">@issue.Priority</div>
+							<div class="col-2">
+								<p class="px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
+							style="width: fit-content; background-color: @issue.Priority.Color;">
+									@issue.Priority.Name
+								</p>
+							</div>
 						</div>
 					</a>
 				}
