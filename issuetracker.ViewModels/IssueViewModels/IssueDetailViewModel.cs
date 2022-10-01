@@ -6,7 +6,7 @@ public class IssueDetailViewModel
 {
 	public IssueDetailViewModel()
 	{
-		AssignedTo = new List<AssignedToUserViewModel>();
+		AssignedTo = new List<AssignUserViewModel>();
 		Tags = new List<Tag>();
 		Priority = new Priority();
 	}
@@ -21,6 +21,6 @@ public class IssueDetailViewModel
 	public string Status { get; set; }
 	public Priority Priority { get; set; }
 	public string ResolutionSummary { get; set; }
-	public List<AssignedToUserViewModel> AssignedTo { get; set; }
+	public List<AssignUserViewModel> AssignedTo { get; set; }
 	public List<Tag> Tags { get; set; }
 }
