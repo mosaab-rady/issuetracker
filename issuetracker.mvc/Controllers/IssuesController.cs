@@ -141,6 +141,7 @@ public class IssuesController : Controller
 			CreatedBy = User.Identity.Name,
 			Tags = new List<Tag>(),
 			Status = Status.Open,
+			TargetResolutionDate = DateTime.UtcNow.AddYears(1)
 		};
 
 		var project = await projectsService.GetProjectByIdAsync(Guid.Parse(model.ProjectId));
