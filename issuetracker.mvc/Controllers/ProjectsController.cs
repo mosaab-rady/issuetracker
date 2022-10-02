@@ -40,31 +40,40 @@ public class ProjectsController : Controller
 			return View("NotFound");
 		}
 
-		List<Issue> unAssignedIssues = new();
-		List<Issue> overDueIssues = new();
-		List<Issue> openIssues = new();
-		List<Issue> closedIssues = new();
+		List<IssueViewModel> unAssignedIssues = new();
+		List<IssueViewModel> overDueIssues = new();
+		List<IssueViewModel> openIssues = new();
+		List<IssueViewModel> closedIssues = new();
 
 		foreach (var issue in project.Issues)
 		{
+			IssueViewModel issueViewModel = new()
+			{
+				IssueId = issue.Id.ToString(),
+				Priority = issue.Priority ?? new Priority() { Color = "#6699ff", Name = "Not Set" },
+				Status = Enum.GetName(typeof(Status), issue.Status),
+				ProjectName = project.Name,
+				Title = issue.Title
+			};
+
 			if (issue.AssignedTo.Count() == 0)
 			{
-				unAssignedIssues.Add(issue);
+				unAssignedIssues.Add(issueViewModel);
 			}
 
-			if (issue.TargetResolutionDate > DateTime.UtcNow)
+			if (issue.TargetResolutionDate < DateTime.UtcNow && issue.Status == Status.Open)
 			{
-				overDueIssues.Add(issue);
+				overDueIssues.Add(issueViewModel);
 			}
 
 			if (issue.Status == Status.Open)
 			{
-				openIssues.Add(issue);
+				openIssues.Add(issueViewModel);
 			}
 
 			if (issue.Status == Status.Closed)
 			{
-				closedIssues.Add(issue);
+				closedIssues.Add(issueViewModel);
 			}
 
 		}
@@ -218,6 +227,77 @@ public class ProjectsController : Controller
 				await projectsService.UnAssignUser(user, project.Id);
 			}
 		}
+
+		return RedirectToAction("project", "projects", new { id = project.Slug });
+	}
+
+
+
+
+	[HttpPost]
+	public async Task<IActionResult> Delete(string id)
+	{
+		if (!ModelState.IsValid) return View();
+
+
+		var project = await projectsService.GetProjectByIdAsync(Guid.Parse(id));
+		if (project is null)
+		{
+			ViewBag.Error = $"No Project found with this id {id}";
+			return View("NotFound");
+		}
+
+
+		await projectsService.DeleteProjectByIdAsync(project.Id);
+
+
+		return RedirectToAction("index", "projects");
+	}
+
+	[HttpGet]
+	public async Task<IActionResult> Edit(string id)
+	{
+		var project = await projectsService.GetProjectByIdAsync(Guid.Parse(id));
+		if (project is null)
+		{
+			ViewBag.Error = $"No Project found with this id {id}.";
+			return View("NotFound");
+		}
+
+
+		EditProjectViewModel editProjectViewModel = new()
+		{
+			Id = project.Id.ToString(),
+			Name = project.Name,
+			Slug = project.Slug,
+			StartDate = project.StartDate,
+			TargetEndDate = project.TargetEndDate,
+			ActualEndDate = project.ActualEndDate
+		};
+
+		return View(editProjectViewModel);
+	}
+
+
+	[HttpPost]
+	public async Task<IActionResult> Edit(EditProjectViewModel model, string id)
+	{
+		if (!ModelState.IsValid) return View(model);
+		var project = await projectsService.GetProjectByIdAsync(Guid.Parse(id));
+
+		if (project is null)
+		{
+			ViewBag.Error = $"No Project found with this Id {id}";
+			return View("NotFound");
+		}
+
+		project.Name = model.Name;
+		project.Slug = Slugify(model.Name);
+		project.StartDate = model.StartDate.ToUniversalTime();
+		project.TargetEndDate = model.TargetEndDate.ToUniversalTime();
+		project.ActualEndDate = model.ActualEndDate.ToUniversalTime();
+
+		await projectsService.UpdateProjectByIdAsync(project.Id, project);
 
 		return RedirectToAction("project", "projects", new { id = project.Slug });
 	}
