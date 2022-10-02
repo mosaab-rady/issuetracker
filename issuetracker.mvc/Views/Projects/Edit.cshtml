@@ -1,0 +1,54 @@
+@model EditProjectViewModel
+@{
+	ViewData["Title"] = "Edit Project";
+}
+
+<div class="container-fluid my-3">
+	<div class="row ms-md-3">
+		<div class="col-md-7">
+			<form asp-action="edit" asp-controller="projects" asp-route-id="@Model.Id" method="post">
+				<legend class="text-dark">Edit @Model.Name</legend>
+
+				<div class="form-floating my-3">
+					<input asp-for="Id" disabled class="form-control bg-primary">
+					<label asp-for="Id" class="form-label text-dark fw-bold"></label>
+					<span class="text-danger" asp-validation-for="Id"></span>
+				</div>
+
+
+				<div class="form-group my-3">
+					<label asp-for="Name" class="form-label text-muted fw-bold"></label>
+					<input asp-for="Name" class="form-control">
+					<span class="text-danger" asp-validation-for="Name"></span>
+				</div>
+
+
+				<div class="form-group my-3">
+					<label asp-for="StartDate" class="form-label text-muted fw-bold"></label>
+					<input asp-for="StartDate" class="form-control">
+					<span class="text-danger" asp-validation-for="StartDate"></span>
+				</div>
+
+				<div class="form-group my-3">
+					<label asp-for="TargetEndDate" class="form-label text-muted fw-bold"></label>
+					<input asp-for="TargetEndDate" class="form-control">
+					<span class="text-danger" asp-validation-for="TargetEndDate"></span>
+				</div>
+
+				<div class="form-group my-3">
+					<label asp-for="ActualEndDate" class="form-label text-muted fw-bold"></label>
+					<input asp-for="ActualEndDate" class="form-control">
+					<span class="text-danger" asp-validation-for="ActualEndDate"></span>
+				</div>
+
+
+				<div class="form-group my-3 text-end">
+					<input type="submit" value="Update" class="btn btn-outline-dark">
+					<a asp-action="project" asp-controller="projects" asp-route-id="@Model.Slug"
+						class="btn btn-primary">cancel</a>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>
