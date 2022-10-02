@@ -11,9 +11,9 @@ public class ProjectDetailViewModel
 	public DateTime ActualEndDate { get; set; }
 	public DateTime CreatedOn { get; set; }
 	public string CreatedBy { get; set; }
-	public List<Issue> UnAssignedIssued { get; set; }
-	public List<Issue> OverDueIssues { get; set; }
-	public List<Issue> OpenIssues { get; set; }
-	public List<Issue> ClosedIssue { get; set; }
+	public List<IssueViewModel> UnAssignedIssued { get; set; }
+	public List<IssueViewModel> OverDueIssues { get; set; }
+	public List<IssueViewModel> OpenIssues { get; set; }
+	public List<IssueViewModel> ClosedIssue { get; set; }
 	public List<AssignUserViewModel> AssignedTo { get; set; }
 }
