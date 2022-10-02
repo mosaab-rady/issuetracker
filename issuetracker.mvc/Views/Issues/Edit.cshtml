@@ -7,7 +7,7 @@
 	<div class="row mx-md-3">
 		<div class="col-md-8">
 			<form asp-action="Edit" asp-controller="issues" asp-route-id="@Model.IssueId" method="post">
-				<legend class="text-primary">Edit @Model.Title</legend>
+				<legend class="text-dark">Edit @Model.Title</legend>
 				<div class="form-floating my-3">
 					<input asp-for="IssueId" hidden>
 					<input asp-for="IssueId" disabled class="form-control bg-primary">
@@ -112,7 +112,7 @@
 
 
 				<div class="form-group my-3 text-end">
-					<input type="submit" value="Edit" class="btn btn-outline-success">
+					<input type="submit" value="Update" class="btn btn-outline-dark">
 					<a asp-action="issue" asp-controller="issues" asp-route-id="@Model.IssueId" class="btn btn-primary">cancel</a>
 				</div>
 
