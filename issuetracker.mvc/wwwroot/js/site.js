@@ -11,7 +11,7 @@ sidbarToggleBtn.addEventListener("click", () => {
 	toggle();
 });
 
-let hidden = false;
+let hidden = true;
 function toggle() {
 
 	if (hidden) {
