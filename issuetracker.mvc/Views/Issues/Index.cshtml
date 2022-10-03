@@ -1,4 +1,4 @@
-@model List<IssueViewModel>
+@model AllIsuesViewModel
 @{
 	ViewData["Title"] = "Issues";
 }
@@ -6,14 +6,55 @@
 <div class="container-fluid my-3">
 
 	@* Row for filters *@
-	<div class="row"></div>
+	<div class="row mx-2 mb-5">
+		<div class="col ms-md-4 bg-secondary py-3 px-4 rounded-3 boxshadow">
+			<form asp-action="index" asp-controller="issues" method="get"
+				class="d-flex align-items-end justify-content-between">
+
+				<div class="form-group">
+					<label asp-for="Project" class="form-label text-light fw-bold">Project</label>
+					<input asp-for="Project" list="projectsOptions" class="form-control">
+					<datalist id="projectsOptions">
+						@foreach (var project in Model.Projects)
+						{
+							<option value="@project">@project</option>
+						}
+					</datalist>
+				</div>
+				<div class="form-group">
+					<label asp-for="Priority" class="form-label text-light fw-bold">Priority</label>
+					<input asp-for="Priority" list="priorityOptions" class="form-control">
+					<datalist id="priorityOptions">
+						@foreach (var priority in Model.Priorities)
+						{
+							<option value="@priority">@priority</option>
+						}
+					</datalist>
+				</div>
+				<div class="form-group">
+					<label asp-for="Status" class="form-label text-light fw-bold">Status</label>
+					<input asp-for="Status" list="statusOptions" class="form-control	">
+					<datalist id="statusOptions">
+						@foreach (var status in Model.Statuses)
+						{
+							<option value="@status">@status</option>
+						}
+					</datalist>
+				</div>
+
+				<div class="form-group">
+					<button type="submit" class="btn btn-outline-light"><i class="bi bi-search"></i> Search</button>
+				</div>
+			</form>
+		</div>
+	</div>
 
 
 	<div class="row mx-2">
 		<div class="col ms-md-4">
 
 
-			@if (Model.Count() == 0)
+			@if (Model.issueViewModels.Count() == 0)
 			{
 				<div class="row">
 					<div class="col text-center">
@@ -30,7 +71,7 @@
 					<div class="col-2 fw-bold">Priority</div>
 				</div>
 
-				@foreach (var issue in Model)
+				@foreach (var issue in Model.issueViewModels)
 				{
 					<a asp-action="issue" asp-controller="issues" asp-route-id="@issue.IssueId"
 				class="text-dark text-decoration-none">
