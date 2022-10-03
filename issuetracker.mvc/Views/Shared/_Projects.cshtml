@@ -1,0 +1,13 @@
+@model List<ProjectViewModel>
+@foreach (var proj in Model)
+{
+	<a asp-action="project" asp-controller="projects" asp-route-id="@proj.Slug"
+	style="color: black; text-decoration: none;">
+		<div class="projectRow row py-3 my-3 boxshadow rounded-3 border-start border-5 border-success">
+			<div class="col-3 h6">@proj.Name</div>
+			<div class="col-3">@proj.StartDate.ToShortDateString()</div>
+			<div class="col-3">@proj.TargetEndDate.ToShortDateString()</div>
+			<div class="col-3">@proj.ActualEndDate.ToShortDateString()</div>
+		</div>
+	</a>
+}
