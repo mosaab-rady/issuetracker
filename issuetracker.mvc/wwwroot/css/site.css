@@ -21,6 +21,11 @@ body {
   min-height: 90vh;
   width: 250px;
   overflow: hidden;
+  display: none;
+}
+
+#sidenvContainer {
+  padding: 0 1rem;
 }
 
 #sidebar_toggle_btn {
