@@ -39,28 +39,34 @@
 
 
 
-				<div id="CreatePriorityContainer" class="border p-4 mt-2 justify-content-between w-50" style="display: none;">
-					<div class="from-group my-3">
-						<label asp-for="CreatePriorityViewModel.Name" class="form-label text-muted fw-bold"></label>
-						<input class="form-control" asp-for="CreatePriorityViewModel.Name">
-					</div>
-					<div class="form-group my-3">
-						<label asp-for="CreatePriorityViewModel.Color" class="form-label text-muted fw-bold"></label>
-						<input type="color" asp-for="CreatePriorityViewModel.Color" class="form-control form-control-color">
-					</div>
-				</div>
+
 
 
 				<div class="form-group my-3 mt-5">
 					<label asp-for="PriorityId" class="form-label text-muted fw-bold">Priority</label>
 					<a class="btn btn-sm btn-outline-primary ms-5" onclick="NewPriority()">New Priority</a>
+
+					<div id="CreatePriorityContainer" class="border p-4 my-4 justify-content-between w-50 boxshadow rounded-3"
+						style="display: none;">
+						<div class="from-group my-3">
+							<label asp-for="CreatePriorityViewModel.Name" class="form-label text-muted fw-bold"></label>
+							<input class="form-control" asp-for="CreatePriorityViewModel.Name">
+						</div>
+						<div class="form-group my-3">
+							<label asp-for="CreatePriorityViewModel.Color" class="form-label text-muted fw-bold"></label>
+							<input type="color" asp-for="CreatePriorityViewModel.Color" class="form-control form-control-color">
+						</div>
+					</div>
+
+
+
 					@for (int i = 0; i < Model.Priorities.Count; i++)
 					{
-						<div class="form-check my-2">
+						<div class="form-check my-3">
 							<input class="form-check-input" type="radio" asp-for="@Model.PriorityId" value="@Model.Priorities[i].Id"
 							id="@Model.Priorities[i].Id">
 							<label class="form-check-label" for="@Model.Priorities[i].Id">
-								<p class="my-0 rounded-pill px-3 py-1 text-lowercase"
+								<p class="my-0 rounded px-2 py-0 text-lowercase"
 								style="width: fit-content; background-color: @Model.Priorities[i].Color;">
 									@Model.Priorities[i].Name</p>
 							</label>
@@ -71,20 +77,22 @@
 
 
 
-				<div id="createTagContainer" class="border p-4 mt-2 justify-content-between w-50" style="display: none;">
-					<div class="from-group my-3">
-						<label asp-for="CreateTagViewModel.Name" class="form-label text-muted fw-bold"></label>
-						<input class="form-control" asp-for="CreateTagViewModel.Name">
-					</div>
-					<div class="form-group my-3">
-						<label asp-for="CreateTagViewModel.Color" class="form-label text-muted fw-bold"></label>
-						<input type="color" asp-for="CreateTagViewModel.Color" class="form-control form-control-color">
-					</div>
-				</div>
-
 				<div class="form-group my-3 mt-5">
 					<label asp-for="Tags" class="form-label text-muted fw-bold"></label>
 					<a class="btn btn-sm btn-outline-primary ms-5" onclick="NewTag()">New Tag</a>
+
+
+					<div id="createTagContainer" class="border p-4 mt-2 justify-content-between w-50 boxshadow rounded-3"
+						style="display: none;">
+						<div class="from-group my-3">
+							<label asp-for="CreateTagViewModel.Name" class="form-label text-muted fw-bold"></label>
+							<input class="form-control" asp-for="CreateTagViewModel.Name">
+						</div>
+						<div class="form-group my-3">
+							<label asp-for="CreateTagViewModel.Color" class="form-label text-muted fw-bold"></label>
+							<input type="color" asp-for="CreateTagViewModel.Color" class="form-control form-control-color">
+						</div>
+					</div>
 
 					<div class="row mt-3 w-50">
 						@for (int i = 0; i < Model.Tags.Count; i++)
@@ -93,7 +101,7 @@
 								<input type="hidden" asp-for="@Model.Tags[i].TagId">
 								<input asp-for="@Model.Tags[i].IsSelected">
 								<label asp-for="@Model.Tags[i].IsSelected">
-									<p class="my-0 rounded-pill px-3 py-1 text-lowercase"
+									<p class="my-0 rounded px-2 py-0 text-lowercase"
 									style="width: fit-content; background-color: @Model.Tags[i].Color;">
 										@Model.Tags[i].Name</p>
 								</label>
