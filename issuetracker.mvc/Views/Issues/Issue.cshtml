@@ -66,13 +66,13 @@
 					<div class="col-3">@Model.TargetResolutionDate.ToShortDateString()</div>
 					<div class="col-4">@Model.ActualResolutionDate.ToShortDateString()</div>
 					<div class="col-2">
-						<p class="@(Model.Status=="Closed" ? "bg-success" : "bg-danger") px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
+						<p class="@(Model.Status=="Closed" ? "bg-success" : "bg-danger") px-2 py-0 rounded my-0 text-lowercase boxshadow"
 							style="width: fit-content;">
 							@Model.Status
 						</p>
 					</div>
 					<div class="col-2">
-						<p class="px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
+						<p class="px-2 py-0 rounded my-0 text-lowercase boxshadow"
 							style="width: fit-content; background-color: @Model.Priority.Color;">
 							@Model.Priority.Name
 						</p>
@@ -121,7 +121,7 @@
 						foreach (var tag in Model.Tags)
 						{
 							<div class="">
-								<p class="boxshadow px-3 py-1 my-0 rounded-pill" style="background-color: @tag.Color; width:fit-content;">
+								<p class="boxshadow px-2 py-0 my-0 rounded" style="background-color: @tag.Color; width:fit-content;">
 									@tag.Name</p>
 							</div>
 						}
@@ -179,30 +179,7 @@
 					{
 						<div class="col">
 
-							@foreach (var user in Model.AssignedTo)
-							{
-								<div class="row my-2 py-2 align-items-center border-start border-5 
-								border-info rounded-3 boxshadow">
-
-									<div class="col-8 d-flex align-items-center">
-										<img src="/img/@user.Image" class="rounded-circle boxshadow me-3" width="35px" height="35px" alt="">
-										<div>
-											<p class="my-0 fw-bold">
-												@user.Name
-											</p>
-											<p class="my-0">
-												@user.Email
-											</p>
-										</div>
-									</div>
-									<div class="col-4">
-										@foreach (var role in user.Roles)
-										{
-											<li>@role</li>
-										}
-									</div>
-								</div>
-							}
+							<partial name="_AssignedToUsers" model="@Model.AssignedTo" />
 						</div>
 					}
 				</div>
