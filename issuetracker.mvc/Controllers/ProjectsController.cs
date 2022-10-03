@@ -25,7 +25,23 @@ public class ProjectsController : Controller
 	public async Task<IActionResult> Index()
 	{
 		var projects = await projectsService.GetAllProjectsAsync();
-		return View(projects);
+		List<ProjectViewModel> model = new();
+		foreach (var project in projects)
+		{
+			ProjectViewModel projectViewModel = new()
+			{
+				Id = project.Id.ToString(),
+				Name = project.Name,
+				Slug = project.Slug,
+				StartDate = project.StartDate,
+				TargetEndDate = project.TargetEndDate,
+				ActualEndDate = project.ActualEndDate
+			};
+
+			model.Add(projectViewModel);
+		}
+
+		return View(model);
 	}
 
 
