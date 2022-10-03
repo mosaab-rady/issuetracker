@@ -19,7 +19,7 @@
 				<a onclick="confirmDeleteProject()" class="btn btn-danger">Delete</a>
 
 				<div id="confirmDeleteProjectBox" class="gap-2 text-center bg-white boxshadow border p-2 rounded-3"
-					style="position: absolute; bottom: -20px; right: 0px; display: none;">
+					style="position: absolute; bottom: -60px; right: 0px; display: none;">
 					<p class="m-2">Are you sure you want to delete this project?</p>
 					<button type="submit" class="btn btn-outline-danger btn-sm px-3">Yes</button>
 					<a class="btn btn-primary btn-sm px-3" onclick="cancelDeleteProject()">No</a>
@@ -107,29 +107,7 @@
 					@if (Model.OverDueIssues.Count > 0)
 					{
 						<div class="col">
-							@foreach (var issue in Model.OverDueIssues)
-							{
-								<a asp-action="issue" asp-controller="issues" asp-route-id="@issue.IssueId"
-							class="text-dark text-decoration-none">
-									<div class="row projectRow py-3 boxshadow my-3 border-start border-5 rounded-3 
-										@(issue.Status=="Closed" ? "border-success" : "border-danger")">
-										<div class="col-4 fw-bold">@issue.Title</div>
-										<div class="col-4">@issue.ProjectName</div>
-										<div class="col-2">
-											<p class="@(issue.Status=="Closed" ? "bg-success" : "bg-danger") px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
-										style="width: fit-content;">
-												@issue.Status
-											</p>
-										</div>
-										<div class="col-2">
-											<p class="px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
-										style="width: fit-content; background-color: @issue.Priority.Color;">
-												@issue.Priority.Name
-											</p>
-										</div>
-									</div>
-								</a>
-							}
+							<partial name="_Issues" model="@Model.OverDueIssues" />
 						</div>
 					}
 					else
@@ -159,29 +137,7 @@
 					@if (Model.UnAssignedIssued.Count > 0)
 					{
 						<div class="col">
-							@foreach (var issue in Model.UnAssignedIssued)
-							{
-								<a asp-action="issue" asp-controller="issues" asp-route-id="@issue.IssueId"
-							class="text-dark text-decoration-none">
-									<div class="row projectRow py-3 boxshadow my-3 border-start border-5 rounded-3 
-										@(issue.Status=="Closed" ? "border-success" : "border-danger")">
-										<div class="col-4 fw-bold">@issue.Title</div>
-										<div class="col-4">@issue.ProjectName</div>
-										<div class="col-2">
-											<p class="@(issue.Status=="Closed" ? "bg-success" : "bg-danger") px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
-										style="width: fit-content;">
-												@issue.Status
-											</p>
-										</div>
-										<div class="col-2">
-											<p class="px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
-										style="width: fit-content; background-color: @issue.Priority.Color;">
-												@issue.Priority.Name
-											</p>
-										</div>
-									</div>
-								</a>
-							}
+							<partial name="_Issues" model="@Model.UnAssignedIssued" />
 						</div>
 					}
 					else
@@ -209,29 +165,7 @@
 					@if (Model.OpenIssues.Count() > 0)
 					{
 						<div class="col">
-							@foreach (var issue in Model.OpenIssues)
-							{
-								<a asp-action="issue" asp-controller="issues" asp-route-id="@issue.IssueId"
-							class="text-dark text-decoration-none">
-									<div class="row projectRow py-3 boxshadow my-3 border-start border-5 rounded-3 
-										@(issue.Status=="Closed" ? "border-success" : "border-danger")">
-										<div class="col-4 fw-bold">@issue.Title</div>
-										<div class="col-4">@issue.ProjectName</div>
-										<div class="col-2">
-											<p class="@(issue.Status=="Closed" ? "bg-success" : "bg-danger") px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
-										style="width: fit-content;">
-												@issue.Status
-											</p>
-										</div>
-										<div class="col-2">
-											<p class="px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
-										style="width: fit-content; background-color: @issue.Priority.Color;">
-												@issue.Priority.Name
-											</p>
-										</div>
-									</div>
-								</a>
-							}
+							<partial name="_Issues" model="@Model.OpenIssues" />
 						</div>
 					}
 					else
@@ -256,29 +190,7 @@
 					@if (Model.ClosedIssue.Count() > 0)
 					{
 						<div class="col">
-							@foreach (var issue in Model.ClosedIssue)
-							{
-								<a asp-action="issue" asp-controller="issues" asp-route-id="@issue.IssueId"
-							class="text-dark text-decoration-none">
-									<div class="row projectRow py-3 boxshadow my-3 border-start border-5 rounded-3 
-										@(issue.Status=="Closed" ? "border-success" : "border-danger")">
-										<div class="col-4 fw-bold">@issue.Title</div>
-										<div class="col-4">@issue.ProjectName</div>
-										<div class="col-2">
-											<p class="@(issue.Status=="Closed" ? "bg-success" : "bg-danger") px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
-										style="width: fit-content;">
-												@issue.Status
-											</p>
-										</div>
-										<div class="col-2">
-											<p class="px-3 py-1 rounded-pill my-0 text-lowercase boxshadow"
-										style="width: fit-content; background-color: @issue.Priority.Color;">
-												@issue.Priority.Name
-											</p>
-										</div>
-									</div>
-								</a>
-							}
+							<partial name="_Issues" model="@Model.ClosedIssue" />
 						</div>
 					}
 					else
@@ -321,31 +233,7 @@
 					else
 					{
 						<div class="col">
-
-							@foreach (var user in Model.AssignedTo)
-							{
-								<div class="row my-2 py-2 align-items-center border-start border-5 
-								border-info rounded-3 boxshadow">
-
-									<div class="col-8 d-flex align-items-center">
-										<img src="/img/@user.Image" class="rounded-circle boxshadow me-3" width="35px" height="35px" alt="">
-										<div>
-											<p class="my-0 fw-bold">
-												@user.Name
-											</p>
-											<p class="my-0">
-												@user.Email
-											</p>
-										</div>
-									</div>
-									<div class="col-4">
-										@foreach (var role in user.Roles)
-										{
-											<li>@role</li>
-										}
-									</div>
-								</div>
-							}
+							<partial name="_AssignedToUsers" model="@Model.AssignedTo" />
 						</div>
 					}
 				</div>
