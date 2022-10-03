@@ -27,9 +27,18 @@ public class IssuesController : Controller
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> Index()
+	public async Task<IActionResult> Index(string project, string priority, string status)
 	{
-		List<IssueViewModel> model = new();
+
+		AllIsuesViewModel model = new()
+		{
+			Project = project,
+			Priority = priority,
+			Status = status,
+			Statuses = new List<string>() { "Open", "Closed" }
+		};
+
+		List<IssueViewModel> issueViewModels = new();
 
 
 		foreach (var issue in await issuesService.GetAllIssuesAsync())
@@ -46,8 +55,34 @@ public class IssuesController : Controller
 			};
 
 
-			model.Add(issueViewModel);
+
+			issueViewModels.Add(issueViewModel);
 		}
+
+
+		model.Projects = from _project in await projectsService.GetAllProjectsAsync()
+										 select _project.Name;
+		model.Priorities = from _priority in await priorityService.GetAllPrioritiesAsync()
+											 select _priority.Name;
+
+		// filters
+		if (project != null)
+		{
+			issueViewModels = issueViewModels.FindAll(x => x.ProjectName == project);
+		}
+		if (priority != null)
+		{
+			issueViewModels = issueViewModels.FindAll(x => x.Priority.Name == priority);
+		}
+		if (status != null)
+		{
+			issueViewModels = issueViewModels.FindAll(x => x.Status == status);
+		}
+
+
+
+		model.issueViewModels = issueViewModels;
+
 		return View(model);
 	}
 
