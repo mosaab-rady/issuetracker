@@ -37,7 +37,8 @@
 				</a>
 			</div>
 			<div class="my-2">
-				<a href="" class="btn w-100 text-start sidebarLink">
+					<a asp-action="index" asp-controller="users" class=@(Context.Request.Path.ToString().StartsWith("/users") ?
+					"btn-primary btn w-100 text-start" : "sidebarLink btn w-100 text-start")>
 					<i class="bi bi-people"></i>
 					&nbsp;Users
 				</a>
