@@ -1,0 +1,71 @@
+@model List<EditIssueAssignedToUserViewModel>
+@{
+	var userId = ViewBag.UserId;
+	ViewData["Title"] = "Add or Remove Issues";
+}
+
+
+<div class="container-fluid my-3">
+	<div class="row">
+		<div class="col-md-5 ms-md-4">
+			<form asp-action="EditIssuesAssignedToUser" asp-controller="users" asp-route-id="@userId" method="post">
+				<div class="card">
+					<div class="card-header bg-primary text-light">
+						Add or Remove Issues to this user
+					</div>
+					<div class="card-body pe-4 py-1">
+						@if (Model.Count() == 0)
+						{
+							<p class="fw-bold mb-0 text-danger">No Issues Available for this user.</p>
+							<p>Make suer the user is assigned to a project first.</p>
+						}
+						else
+						{
+							for (int i = 0; i < Model.Count; i++)
+							{
+								<div class="form-group my-4 px-2 rounded-3 d-flex align-items-center">
+									<input type="hidden" asp-for="@Model[i].IssueId">
+									<input asp-for="@Model[i].IsSelected">
+									<label asp-for="@Model[i].IsSelected"
+								class="ms-3 d-flex w-100 justify-content-between align-items-center">
+										<div>
+											<p class="mb-0 fw-bold">
+												@Model[i].IssueTitle
+											</p>
+											<p class="mb-0">
+												Project : @Model[i].ProjectName
+											</p>
+										</div>
+										<p class="@(Model[i].IssueStatus=="Closed" ? "bg-success" : "bg-danger") px-2 py-0 rounded my-0 text-lowercase boxshadow"
+									style="width: fit-content;">
+											@Model[i].IssueStatus</p>
+									</label>
+								</div>
+							}
+
+						}
+					</div>
+					<div class="card-footer d-flex gap-2 align-items-center">
+						@if (Model.Count() == 0)
+						{
+							<input type="submit" class="btn btn-dark w-50" value="Update" disabled>
+						}
+						else
+						{
+							<input type="submit" class="btn btn-outline-dark w-50" value="Update">
+
+						}
+						<a asp-action="userinformation" asp-controller="users" asp-route-id="@userId"
+							class="btn btn-primary w-50">Cancel</a>
+					</div>
+				</div>
+				<div class="text-danger" asp-validation-summary="All"></div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
