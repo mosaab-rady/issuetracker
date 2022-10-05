@@ -30,7 +30,7 @@ public class ProjectsController : Controller
 		{
 			ProjectViewModel projectViewModel = new()
 			{
-				Id = project.Id.ToString(),
+				ProjectId = project.Id.ToString(),
 				Name = project.Name,
 				Slug = project.Slug,
 				StartDate = project.StartDate,
