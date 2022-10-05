@@ -1,0 +1,43 @@
+@model List<EditProjectAssignedToUserViewModel>
+@{
+	var userId = ViewBag.UserId;
+	ViewData["Title"] = "Add or remove Projects";
+}
+
+<div class="container-fluid my-3">
+	<div class="row">
+		<div class="col-md-5 ms-md-4">
+			<form asp-action="EditProjectsAssignedToUser" asp-controller="users" asp-route-id="@userId" method="post">
+				<div class="card">
+					<div class="card-header bg-primary text-light">
+						Add or Remove Projects to this user
+					</div>
+					<div class="card-body pe-4 py-1">
+						@for (int i = 0; i < Model.Count; i++)
+						{
+							<div class="form-group my-4 px-2 rounded-3 d-flex align-items-center">
+								<input type="hidden" asp-for="@Model[i].ProjectId">
+								<input type="hidden" asp-for="@Model[i].ProjectName">
+								<input asp-for="@Model[i].IsSelected">
+								<label asp-for="@Model[i].IsSelected" class="ms-3">
+									@Model[i].ProjectName
+								</label>
+							</div>
+						}
+					</div>
+					<div class="card-footer d-flex gap-2 align-items-center">
+						<input type="submit" class="btn btn-outline-dark w-50" value="Update">
+						<a asp-action="userinformation" asp-controller="users" asp-route-id="@userId"
+							class="btn btn-primary w-50">Cancel</a>
+					</div>
+				</div>
+				<div class="text-danger" asp-validation-summary="All"></div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
