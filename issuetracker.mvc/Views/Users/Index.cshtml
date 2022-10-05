@@ -35,10 +35,10 @@
 								<div class="card-header bg-primary">
 									User Id : @user.Id
 								</div>
-								<div class="card-body">
 
-									<div class="d-flex">
-										<img src="/img/@user.Image" width="40px" height="40px" class="rounded-circle me-4 boxshadow" alt="">
+								<div class="card-body">
+									<div class="d-flex align-items-center flex-wrap">
+										<img src="/img/@user.Image" width="80px" height="80px" class="rounded-circle me-4 boxshadow" alt="">
 										<div class="">
 											<h6 class="fw-bold">
 												@user.UserName
@@ -57,8 +57,15 @@
 											</ul>
 										</div>
 									</div>
-
 								</div>
+
+								<div class="card-footer text-end">
+									<a asp-action="userinformation" asp-controller="users" asp-route-id="@user.Id"
+								class=" btn btn-outline-dark">
+										User Information <i class="bi bi-chevron-double-right"></i>
+									</a>
+								</div>
+
 							</div>
 						</div>
 					}
