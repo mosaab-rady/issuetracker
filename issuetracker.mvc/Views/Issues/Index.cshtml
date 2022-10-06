@@ -8,10 +8,9 @@
 	@* Row for filters *@
 	<div class="row mx-2 mb-5">
 		<div class="col ms-md-4 bg-success py-3 px-4 rounded-3 boxshadow">
-			<form asp-action="index" asp-controller="issues" method="get"
-				class="d-flex align-items-end justify-content-between">
+			<form asp-action="index" asp-controller="issues" method="get" class="row align-items-end">
 
-				<div class="form-group">
+				<div class="form-group col-3">
 					<label asp-for="Project" class="form-label text-light fw-bold">Project</label>
 					<input asp-for="Project" list="projectsOptions" class="form-control">
 					<datalist id="projectsOptions">
@@ -21,7 +20,7 @@
 						}
 					</datalist>
 				</div>
-				<div class="form-group">
+				<div class="form-group col-3">
 					<label asp-for="Priority" class="form-label text-light fw-bold">Priority</label>
 					<input asp-for="Priority" list="priorityOptions" class="form-control">
 					<datalist id="priorityOptions">
@@ -31,7 +30,7 @@
 						}
 					</datalist>
 				</div>
-				<div class="form-group">
+				<div class="form-group col-3">
 					<label asp-for="Status" class="form-label text-light fw-bold">Status</label>
 					<input asp-for="Status" list="statusOptions" class="form-control	">
 					<datalist id="statusOptions">
@@ -42,7 +41,7 @@
 					</datalist>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group col-3 text-end">
 					<button type="submit" class="btn btn-outline-light"><i class="bi bi-search"></i> Search</button>
 				</div>
 			</form>

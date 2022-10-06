@@ -2,25 +2,27 @@
 
 @foreach (var user in Model)
 {
-	<div class="row my-2 py-2 align-items-center border-start border-5 
-								border-info rounded-3 boxshadow">
+	<a asp-action="userinformation" asp-controller="users" asp-route-id="@user.Id" class="text-dark text-decoration-none">
+		<div class="row projectRow my-2 py-2 align-items-center border-start border-5 
+										border-info rounded-3 boxshadow">
 
-		<div class="col-8 d-flex align-items-center">
-			<img src="/img/@user.Image" class="rounded-circle boxshadow me-3" width="35px" height="35px" alt="">
-			<div>
-				<p class="my-0 fw-bold">
-					@user.Name
-				</p>
-				<p class="my-0">
-					@user.Email
-				</p>
+			<div class="col-8 d-flex align-items-center">
+				<img src="/img/@user.Image" class="rounded-circle boxshadow me-3" width="35px" height="35px" alt="">
+				<div>
+					<p class="my-0 fw-bold">
+						@user.Name
+					</p>
+					<p class="my-0">
+						@user.Email
+					</p>
+				</div>
+			</div>
+			<div class="col-4">
+				@foreach (var role in user.Roles)
+				{
+					<li>@role</li>
+				}
 			</div>
 		</div>
-		<div class="col-4">
-			@foreach (var role in user.Roles)
-			{
-				<li>@role</li>
-			}
-		</div>
-	</div>
+	</a>
 }

@@ -3,9 +3,9 @@
 	ViewData["Title"] = "All Roles";
 }
 
-<div class="container-fluid my-3">
+<div class="container-fluid my-3 ps-md-4">
 
-	<div class="row me-2">
+	<div class="row me-md-2">
 		<div class="col text-end">
 			<a asp-action="CreateRole" asp-controller="adminstration" class="btn btn-primary">
 				Create Role
@@ -75,55 +75,6 @@
 					</div>
 				}
 			</div>
-
-			@* <div class="col-11 mx-auto">
-
-				<div class="row">
-				<div class="col-4 fw-bold">Name</div>
-				<div class="col-4"></div>
-				<div class="col-4 fw-bold">Role Id</div>
-				</div> *@
-
-			@*
-				@foreach (var role in Model)
-				{
-				<div class="row projectRow py-3 my-3 boxshadow rounded-3 border-start border-5 border-success">
-
-				<div class="col-2 fw-bold text-primary">@role.NormalizedName</div>
-
-				<div class="col-6">
-				<div class="d-flex flex-wrap align-items-center gap-3">
-
-				<a asp-action="EditRole" asp-controller="adminstration" asp-route-id="@role.Id"
-				class="btn btn-outline-secondary">
-				Edit
-				</a>
-
-				<form method="post" asp-action="DeleteRole" asp-controller="Adminstration" asp-route-id="@role.Id"
-				class="d-flex">
-
-
-				<a id="delete_btn_@role.Id" onclick="confirmDelete('@role.Id')" class="btn btn-outline-danger">
-				Delete
-				</a>
-
-				<div class="gap-2 align-items-center justify-content-center" id="delete_confirm_@role.Id"
-				style="display: none;">
-				<p class="text-danger m-0">Are you sure you want to delete?</p>
-				<button type="submit" class="btn btn-outline-danger btn-sm">Yes</button>
-				<a class="btn btn-primary btn-sm" onclick="cancelDelete('@role.Id')">No</a>
-				</div>
-
-				<div asp-validation-summary="All" class="text-danger"></div>
-				</form>
-				</div>
-				</div>
-
-				<div class="col-4 text-muted">@role.Id</div>
-				</div>
-				} *@
-
-			@* </div> *@
 
 		</div>
 	}

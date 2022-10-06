@@ -2,9 +2,9 @@
 @{
 	ViewData["Title"] = "User Details";
 }
-<div class="container-fluid my-3">
+<div class="container-fluid my-3 ps-md-4">
 	@* delete user *@
-	<div class="row me-2 mb-3">
+	<div class="row me-md-2 mb-3">
 		<div class="col text-end position-relative">
 			<form asp-action="delete" asp-controller="users" asp-route-id="@Model.UserId" method="post" class="">
 				<a onclick="confirmDeleteUser()" class="btn btn-danger">Delete</a>
@@ -22,7 +22,7 @@
 
 
 	@* user information *@
-	<div class="row px-3">
+	<div class="row px-md-3">
 		<div class="col-md-6 d-flex align-items-center mb-md-0 mb-4">
 			<div class="me-5">
 				<img src="/img/@Model.Image" width="150px" height="150px" class="rounded-circle boxshadow" alt="">
@@ -54,7 +54,7 @@
 
 
 
-	<div class="row px-3 mt-5">
+	<div class="row px-md-3 px-2 mt-5">
 		<div class="col-md-8">
 			<div class="d-flex align-items-center justify-content-between mb-4">
 				<h6 class="text-success">Assigned Projects</h6>
@@ -81,7 +81,7 @@
 
 
 
-	<div class="row px-3 mt-5">
+	<div class="row px-md-3 px-2 mt-5">
 		<div class="col-md-8">
 			<div class="d-flex align-items-center justify-content-between mb-4">
 				<h6 class="text-success">Assigned Issues</h6>
@@ -92,7 +92,7 @@
 		</div>
 	</div>
 
-	<div class="row px-3 mt-4">
+	<div class="row px-md-3 px-2 mt-4">
 		<div class="col-md-8">
 			<h6 class="text-danger">Open Issues</h6>
 			@if (Model.OpenIssues.Count() == 0)
@@ -108,7 +108,7 @@
 	</div>
 
 
-	<div class="row px-3 mt-5">
+	<div class="row px-md-3 px-2 mt-5">
 		<div class="col-md-8">
 			<h6 class="text-success">Closed Issues</h6>
 			@if (Model.ClosedIssues.Count() == 0)

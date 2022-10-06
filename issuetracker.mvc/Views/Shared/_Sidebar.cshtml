@@ -3,7 +3,7 @@
 <div class="border-2 border-end" id="sidenvContainer">
 @if(signInManager.IsSignedIn(User))
 {
-	<div id="mySidenav" class="sidenav text-center ps-3 pe-1" style="position: sticky; left: 0; top: 3.3rem;">
+	<div id="mySidenav" class="border-3 border-end  sidenav bg-light text-center ps-3 pe-1" style="position: fixed; left: 0; z-index: 10;">
 
 		<div class="mt-3 text-start">
 			<a asp-action="create" asp-controller="issues" class="btn btn-outline-danger rounded-3">Create New Issue</a>

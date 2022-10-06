@@ -27,13 +27,13 @@ function toggle() {
 function openNav() {
 	if (sidebar) {
 		sidebar.style.display = "block";
-		document.getElementById("sidenvContainer").style.padding = "0";
+		// document.getElementById("sidenvContainer").style.padding = "0";
 	}
 }
 
 function closeNav() {
 	if (sidebar) {
 		sidebar.style.display = "none";
-		document.getElementById("sidenvContainer").style.padding = "0 1rem";
+		// document.getElementById("sidenvContainer").style.padding = "0 0.5rem";
 	}
 }

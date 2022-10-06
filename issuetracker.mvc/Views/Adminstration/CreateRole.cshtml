@@ -5,7 +5,7 @@
 
 <div class="container-fluid my-3">
 	<div class="row">
-		<div class="col-md-4 boxshadow mx-auto p-4 rounded-3">
+		<div class="col-md-6 p-4 rounded-3">
 			<form asp-action="CreateRole" asp-controller="adminstration" method="post">
 				<legend class="mb-4 text-dark">Create New Role</legend>
 				<div class="text-danger" asp-validation-summary="All"></div>
@@ -14,8 +14,8 @@
 					<input asp-for="Name" class="form-control">
 					<span class="text-danger" asp-validation-for="Name"></span>
 				</div>
-				<div class="form-group my-3">
-					<input type="submit" value="Create Role" class="btn btn-outline-dark w-100">
+				<div class="form-group my-3 text-end">
+					<input type="submit" value="Create Role" class="btn btn-outline-dark">
 				</div>
 			</form>
 		</div>

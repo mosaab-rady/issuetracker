@@ -4,15 +4,15 @@
 	<a asp-action="issue" asp-controller="issues" asp-route-id="@issue.IssueId" class="text-dark text-decoration-none">
 		<div class="row projectRow py-3 boxshadow my-3 border-start border-5 rounded-3 
 				@(issue.Status=="Closed" ? "border-success" : "border-danger")">
-			<div class="col-4 fw-bold">@issue.Title</div>
-			<div class="col-4">@issue.ProjectName</div>
-			<div class="col-2">
+			<div class="col-md-4 col-3 fw-bold">@issue.Title</div>
+			<div class="col-md-4 col-3 ">@issue.ProjectName</div>
+			<div class="col-md-2 col-3 ">
 				<p class="@(issue.Status=="Closed" ? "bg-success" : "bg-danger") px-2 py-0 rounded my-0 text-lowercase boxshadow"
 				style="width: fit-content;">
 					@issue.Status
 				</p>
 			</div>
-			<div class="col-2">
+			<div class="col-md-2 col-3 ">
 				<p class="px-2 py-0 rounded my-0 text-lowercase boxshadow"
 				style="width: fit-content; background-color: @issue.Priority.Color;">
 					@issue.Priority.Name
