@@ -14,11 +14,13 @@ public class HomeController : Controller
 	private readonly ILogger<HomeController> _logger;
 
 	private readonly IIssuesService issuesService;
+	private readonly IProjectsService projectsService;
 
 	public HomeController(ILogger<HomeController> logger, IProjectsService projectsService, IIssuesService issuesService)
 	{
 		_logger = logger;
 		this.issuesService = issuesService;
+		this.projectsService = projectsService;
 	}
 
 	public async Task<IActionResult> Index()
@@ -46,16 +48,46 @@ public class HomeController : Controller
 				model.OverDueIssues.Add(issueViewModel);
 			}
 
-			if (DateTime.UtcNow < issue.CreatedOn.AddDays(5))
+			if (DateTime.UtcNow < issue.CreatedOn.AddDays(7))
 			{
 				model.RecentlyOpenedIssues.Add(issueViewModel);
 			}
 
-			if (issue.Status == Status.Closed)
-			{
-				model.ClosedIssues.Add(issueViewModel);
-			}
+		}
 
+
+
+
+		foreach (var project in await projectsService.GetAllProjectsAsync())
+		{
+			ProjectOverviewViewModel projectOverviewViewModel = new()
+			{
+				ProjectID = project.Id.ToString(),
+				ProjectName = project.Name,
+				Slug = project.Slug,
+				TargetEndDate = project.TargetEndDate,
+				ActaulEndDate = project.ActualEndDate,
+
+				ClosedIssues = (from issue in await issuesService.GetAllIssuesAsync()
+												where issue.Project.Id == project.Id && issue.Status == Status.Closed
+												select issue).Count(),
+
+				OpenIssues = (from issue in await issuesService.GetAllIssuesAsync()
+											where issue.Project.Id == project.Id && issue.Status == Status.Open
+											select issue).Count(),
+
+				UnAssignedIssues = (from issue in await issuesService.GetAllIssuesAsync()
+														where issue.Project.Id == project.Id && issue.AssignedTo.Count == 0
+														select issue).Count(),
+
+				OverdueIssues = (from issue in await issuesService.GetAllIssuesAsync()
+												 where issue.Project.Id == project.Id &&
+												 issue.TargetResolutionDate < DateTime.UtcNow &&
+												 issue.Status == Status.Open
+												 select issue).Count(),
+			};
+
+			model.Projects.Add(projectOverviewViewModel);
 		}
 
 		return View(model);
