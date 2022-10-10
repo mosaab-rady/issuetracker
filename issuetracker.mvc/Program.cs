@@ -32,6 +32,7 @@ builder.Services.AddTransient<IProjectsService, ProjectsService>();
 builder.Services.AddTransient<IIssuesService, IssuesService>();
 builder.Services.AddTransient<ITagsServices, TagsService>();
 builder.Services.AddTransient<IPriorityService, PriorityService>();
+builder.Services.AddTransient<IcommentsService, CommentsService>();
 
 var app = builder.Build();
 
