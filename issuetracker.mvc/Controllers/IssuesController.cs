@@ -15,15 +15,17 @@ public class IssuesController : Controller
 	private readonly IProjectsService projectsService;
 	private readonly ITagsServices tagsServices;
 	private readonly IPriorityService priorityService;
+	private readonly IcommentsService commentsService;
 	private readonly UserManager<AppUser> userManager;
 
-	public IssuesController(IIssuesService issuesService, IProjectsService projectsService, ITagsServices tagsServices, UserManager<AppUser> userManager, IPriorityService priorityService)
+	public IssuesController(IIssuesService issuesService, IProjectsService projectsService, ITagsServices tagsServices, UserManager<AppUser> userManager, IPriorityService priorityService, IcommentsService commentsService)
 	{
 		this.issuesService = issuesService;
 		this.projectsService = projectsService;
 		this.tagsServices = tagsServices;
 		this.userManager = userManager;
 		this.priorityService = priorityService;
+		this.commentsService = commentsService;
 	}
 
 	[HttpGet]
@@ -507,7 +509,123 @@ public class IssuesController : Controller
 
 
 
+	[HttpGet]
+	public async Task<IActionResult> Comments(string issueId)
+	{
+		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(issueId));
 
+		if (issue == null)
+		{
+			ViewBag.Error = $"No issue found with this Id {issueId}.";
+			return View("NotFound");
+		}
+
+
+		var comments = await commentsService.GetAllCommentsOnIssue(issue.Id);
+
+		CommentsOnIssueViewModel model = new();
+
+		foreach (var comment in comments)
+		{
+			CommentViewModel commentViewModel = new()
+			{
+				CommentText = comment.CommentText,
+				CreatedOn = ConvertDate(comment.CreatedOn),
+				UserName = $"{comment.User.FirstName} {comment.User.LastName}",
+				UserImage = comment.User.Image,
+
+			};
+			model.Comments.Add(commentViewModel);
+		}
+
+		model.IssueDescription = issue.Description;
+		model.IssueTitle = issue.Title;
+
+		ViewBag.issueId = issue.Id;
+
+		return View(model);
+	}
+
+
+	[HttpPost]
+	public async Task<IActionResult> CreateComment(CreateCommentViewModel model, string issueId)
+	{
+
+		if (!ModelState.IsValid) return View("comments");
+
+		AppUser user = await userManager.FindByEmailAsync(User.Identity.Name);
+
+		if (user == null)
+		{
+			ViewBag.Error = $"No user found, login and try again.";
+			return View("NotFound");
+		}
+
+		Issue issue = await issuesService.GetIssueByIdAsync(Guid.Parse(issueId));
+		if (user == null)
+		{
+			ViewBag.Error = $"No Issue found with this Id {issueId}.";
+			return View("NotFound");
+		}
+
+		Comment comment = new()
+		{
+			User = user,
+			Issue = issue,
+			CommentText = model.Comment
+		};
+
+		await commentsService.CreateComment(comment);
+
+		return RedirectToAction("comments", "issues", new { issueId = issueId });
+
+	}
+
+
+
+	private string ConvertDate(DateTime date)
+	{
+		const int SECOND = 1;
+		const int MINUTE = 60 * SECOND;
+		const int HOUR = 60 * MINUTE;
+		const int DAY = 24 * HOUR;
+		const int MONTH = 30 * DAY;
+
+		var ts = new TimeSpan(DateTime.UtcNow.Ticks - date.Ticks);
+		double delta = Math.Abs(ts.TotalSeconds);
+
+		if (delta < 1 * MINUTE)
+			return ts.Seconds == 1 ? "one second ago" : ts.Seconds + " seconds ago";
+
+		if (delta < 2 * MINUTE)
+			return "a minute ago";
+
+		if (delta < 45 * MINUTE)
+			return ts.Minutes + " minutes ago";
+
+		if (delta < 90 * MINUTE)
+			return "an hour ago";
+
+		if (delta < 24 * HOUR)
+			return ts.Hours + " hours ago";
+
+		if (delta < 48 * HOUR)
+			return "yesterday";
+
+		if (delta < 30 * DAY)
+			return ts.Days + " days ago";
+
+		if (delta < 12 * MONTH)
+		{
+			int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
+			return months <= 1 ? "one month ago" : months + " months ago";
+		}
+		else
+		{
+			int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
+			return years <= 1 ? "one year ago" : years + " years ago";
+		}
+	}
 
 
 
