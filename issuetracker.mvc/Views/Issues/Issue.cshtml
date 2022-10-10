@@ -11,6 +11,8 @@
 		</div>
 		<div class="col-md-4 position-relative">
 			<div class="d-flex gap-1 justify-content-end me-md-0 me-2">
+				<a asp-action="comments" asp-controller="issues" asp-route-issueId="@Model.IssueId"
+					class="btn btn-outline-info">Discussion</a>
 				@if (Model.Status == "Open")
 				{
 					<a asp-action="closeIssue" asp-controller="issues" asp-route-id="@Model.IssueId"
