@@ -13,6 +13,8 @@ public class Comment
 	[Required]
 	public Issue Issue { get; set; }
 
+	public string CommentText { get; set; }
+
 	[Required]
-	public DateTimeOffset CreatedOn { get; set; }
+	public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 }
