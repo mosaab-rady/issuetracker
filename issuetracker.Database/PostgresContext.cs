@@ -21,7 +21,7 @@ public class PostgresContext : IdentityDbContext<AppUser>
 	public DbSet<Tag> Tags { get; set; }
 
 	public DbSet<Priority> Priority { get; set; }
-
+	public DbSet<Comment> Comments { get; set; }
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 
