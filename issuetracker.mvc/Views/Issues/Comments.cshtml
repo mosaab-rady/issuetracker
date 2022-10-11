@@ -5,27 +5,30 @@
 }
 
 <div class="container-fluid my-3 px-4">
-	<div class="row mx-md-3">
+	<div class="row justify-content-center">
 
 		<div class="col-12">
-			<h4 class="text-primary text-capitalize">@Model.IssueTitle</h4>
+			<h4 class="text-dark text-capitalize">
+				<a asp-action="issue" asp-controller="issues" asp-route-id="@issueId" class="text-decoration-none text-dark">
+					<i class="bi bi-reply-fill"></i>
+				</a>@Model.IssueTitle
+			</h4>
 		</div>
 
-		<div class="col-md-7 mt-3 border-bottom">
-			<h6 class="text-muted border-bottom mb-0 border-2 border-primary pe-3" style="width: fit-content;">Comments</h6>
+		<div class="col-md-10 border-bottom">
+			<h6 class="text-muted border-bottom mb-0 border-2 border-dark pe-3" style="width: fit-content;">Comments</h6>
 		</div>
 
 
-		<div class="col-md-7 ms-md-4 my-3" style="max-height: 60vh; overflow-y: scroll;" id="CommentsDiv">
+		<div class="col-md-10 ms-md-4 my-3" id="CommentsDiv">
 			@foreach (var comment in Model.Comments)
 			{
-				<div class="my-4">
+				<div class="my-2 bg-dark p-3 rounded-3">
 					<div class="d-flex align-items-center">
 						<img src="/img/@comment.UserImage" class="rounded-circle boxshadow me-3" width="30px" height="30px" alt="">
 						<div class="d-flex gap-3">
-							<p class="text-muted mb-0">@comment.UserName
-								<span class="text-muted mb-0" style="font-size: 0.8rem;">
-									commented
+							<p class="text-light mb-0">@comment.UserName
+								<span class="ms-2 mb-0" style="font-size: 0.8rem;">
 									@comment.CreatedOn
 								</span>
 							</p>
@@ -34,7 +37,7 @@
 					<div class="px-5 mt-2">
 						@foreach (var p in comment.CommentText.Split("\r\n"))
 						{
-							<p class="mb-0">
+							<p class="text-muted mb-0">
 								@p
 							</p>
 						}
@@ -44,15 +47,22 @@
 		</div>
 
 
-		<div class="col-md-7 ms-md-4 px-0">
+		<div class="col-md-10 ms-md-4 px-0">
 			<form asp-action="createComment" asp-controller="issues" asp-route-issueId="@issueId" method="post">
+
 				<textarea asp-for="@Model.CreateComment.Comment" name="Comment" rows="3" placeholder="Type Comment"
 					class="form-control"></textarea>
+
 				<input type="hidden" name="IssueId" value="@issueId">
+
 				<div class="text-danger" asp-validation-summary="All"></div>
-				<div class="text-end mt-3">
-					<input type="submit" value="Comment" class="btn btn-outline-primary">
+
+				<div class="text-end">
+					<button type="submit" class="btn btn-outline-primary" style="width: fit-content;">
+						Send &nbsp;<i class="bi bi-send-fill"></i>
+					</button>
 				</div>
+
 			</form>
 		</div>
 
