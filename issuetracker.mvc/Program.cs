@@ -1,5 +1,6 @@
 using issuetracker.Database;
 using issuetracker.Entities;
+using issuetracker.Hubs;
 using issuetracker.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,8 @@ builder.Services.AddTransient<ITagsServices, TagsService>();
 builder.Services.AddTransient<IPriorityService, PriorityService>();
 builder.Services.AddTransient<IcommentsService, CommentsService>();
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -55,5 +58,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
 		name: "default",
 		pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<ChatHub>("/chathub");
 
 app.Run();
