@@ -1,9 +1,11 @@
 using issuetracker.Entities;
+using issuetracker.Hubs;
 using issuetracker.Services;
 using issuetracker.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace issuetracker.mvc.Controllers;
@@ -18,7 +20,9 @@ public class IssuesController : Controller
 	private readonly IcommentsService commentsService;
 	private readonly UserManager<AppUser> userManager;
 
-	public IssuesController(IIssuesService issuesService, IProjectsService projectsService, ITagsServices tagsServices, UserManager<AppUser> userManager, IPriorityService priorityService, IcommentsService commentsService)
+	private readonly IHubContext<ChatHub> hubContext;
+
+	public IssuesController(IIssuesService issuesService, IProjectsService projectsService, ITagsServices tagsServices, UserManager<AppUser> userManager, IPriorityService priorityService, IcommentsService commentsService, IHubContext<ChatHub> hubContext)
 	{
 		this.issuesService = issuesService;
 		this.projectsService = projectsService;
@@ -26,6 +30,7 @@ public class IssuesController : Controller
 		this.userManager = userManager;
 		this.priorityService = priorityService;
 		this.commentsService = commentsService;
+		this.hubContext = hubContext;
 	}
 
 	[HttpGet]
@@ -576,6 +581,16 @@ public class IssuesController : Controller
 		};
 
 		await commentsService.CreateComment(comment);
+
+		await hubContext.Clients.Group(issueId).SendAsync(
+			"ReceiveMessage",
+			comment.CommentText,
+			ConvertDate(comment.CreatedOn),
+			$"{user.FirstName} {user.LastName}",
+			user.Image
+			);
+
+
 
 		return RedirectToAction("comments", "issues", new { issueId = issueId });
 
