@@ -5,6 +5,7 @@
     <ProjectReference Include="..\issuetracker.Database\issuetracker.Database.csproj" />
     <ProjectReference Include="..\issuetracker.Services\issuetracker.Services.csproj" />
     <ProjectReference Include="..\issuetracker.ViewModels\issuetracker.ViewModels.csproj" />
+    <ProjectReference Include="..\issuetracker.Hubs\issuetracker.Hubs.csproj" />
   </ItemGroup>
 
   <ItemGroup>
