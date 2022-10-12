@@ -53,7 +53,7 @@
 				<textarea asp-for="@Model.CreateComment.Comment" name="Comment" rows="3" placeholder="Type Comment"
 					class="form-control"></textarea>
 
-				<input type="hidden" name="IssueId" value="@issueId">
+				<input id="groupNameInput" type="hidden" name="IssueId" value="@issueId">
 
 				<div class="text-danger" asp-validation-summary="All"></div>
 
@@ -66,16 +66,14 @@
 			</form>
 		</div>
 
-	</div>
-</div>
-</div>
-
-@section Scripts {
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+		@section Scripts {
+		@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+		}
 
 
-<script>
-	var element = document.getElementById("CommentsDiv");
-	element.scrollTop = element.scrollHeight;
-</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+		<script src="~/js/Chat.js"></script>
+		<script>
+			var element = document.getElementById("CommentsDiv");
+			element.scrollTop = element.scrollHeight;
+		</script>
