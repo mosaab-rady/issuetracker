@@ -23,11 +23,11 @@
 		<div class="col-md-10 ms-md-4 my-3" id="CommentsDiv">
 			@foreach (var comment in Model.Comments)
 			{
-				<div class="my-2 bg-dark p-3 rounded-3">
+				<div class="my-2 border p-3 rounded-3" style="background-color: #ebebeb;">
 					<div class="d-flex align-items-center">
 						<img src="/img/@comment.UserImage" class="rounded-circle boxshadow me-3" width="30px" height="30px" alt="">
 						<div class="d-flex gap-3">
-							<p class="text-light mb-0">@comment.UserName
+							<p class="text-muted mb-0">@comment.UserName
 								<span class="ms-2 mb-0" style="font-size: 0.8rem;">
 									@comment.CreatedOn
 								</span>
@@ -37,7 +37,7 @@
 					<div class="px-5 mt-2">
 						@foreach (var p in comment.CommentText.Split("\r\n"))
 						{
-							<p class="text-muted mb-0">
+							<p class="text-dark mb-0">
 								@p
 							</p>
 						}
@@ -65,15 +65,17 @@
 
 			</form>
 		</div>
+	</div>
+</div>
 
-		@section Scripts {
-		@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-		}
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
 
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
-		<script src="~/js/Chat.js"></script>
-		<script>
-			var element = document.getElementById("CommentsDiv");
-			element.scrollTop = element.scrollHeight;
-		</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+<script src="~/js/Chat.js"></script>
+<script>
+	var element = document.getElementById("CommentsDiv");
+	element.scrollTop = element.scrollHeight;
+</script>
