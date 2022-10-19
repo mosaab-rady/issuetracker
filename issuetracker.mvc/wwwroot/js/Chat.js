@@ -13,9 +13,11 @@ connection.on("ReceiveMessage", function (commentText, date, username, image) {
 						</div>
 					</div>
 					<div class="px-5 mt-2">
-					<p class="text-dark mb-0">
-					${commentText}
-					</p>
+					${commentText.split('\n').map(elm => {
+		return `<p class="text-dark mb-0">
+		${elm}
+		</p>`
+	}).join('')}
 					</div>
 				</div>`
 
@@ -32,5 +34,36 @@ connection.start().then(function () {
 });
 
 
+
+let CommentForm = document.getElementById("createComment")
+
+if (CommentForm) {
+	CommentForm.addEventListener("submit", (e) => {
+		e.preventDefault();
+		submitComment(e);
+	});
+}
+
+function submitComment(e) {
+	const comment = e.target.Comment.value;
+	const issueId = e.target.IssueId.value;
+
+	const data = { Comment: comment, IssueId: issueId };
+
+	console.log(JSON.stringify(data));
+
+	fetch(`/issues/CreateComment?issueId=${issueId}`, {
+		method: 'POST',
+		body: JSON.stringify(data),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	}).then(res => {
+		console.log(res);
+		if (res.status == 200) {
+			document.getElementById("CommentInp").value = '';
+		}
+	})
+}
 
 
