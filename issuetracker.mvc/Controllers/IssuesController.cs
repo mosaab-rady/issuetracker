@@ -553,7 +553,7 @@ public class IssuesController : Controller
 
 
 	[HttpPost]
-	public async Task<IActionResult> CreateComment(CreateCommentViewModel model, string issueId)
+	public async Task<IActionResult> CreateComment([FromBody] CreateCommentViewModel model, string issueId)
 	{
 
 		if (!ModelState.IsValid) return View("comments");
@@ -592,8 +592,7 @@ public class IssuesController : Controller
 
 
 
-		return RedirectToAction("comments", "issues", new { issueId = issueId });
-
+		return Ok();
 	}
 
 
