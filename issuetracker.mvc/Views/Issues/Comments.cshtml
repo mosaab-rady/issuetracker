@@ -35,7 +35,7 @@
 						</div>
 					</div>
 					<div class="px-5 mt-2">
-						@foreach (var p in comment.CommentText.Split("\r\n"))
+						@foreach (var p in comment.CommentText.Split("\n"))
 						{
 							<p class="text-dark mb-0">
 								@p
@@ -48,9 +48,9 @@
 
 
 		<div class="col-md-10 ms-md-4 px-0">
-			<form asp-action="createComment" asp-controller="issues" asp-route-issueId="@issueId" method="post">
+			<form id="createComment" method="post">
 
-				<textarea asp-for="@Model.CreateComment.Comment" name="Comment" rows="3" placeholder="Type Comment"
+				<textarea required id="CommentInp" name="Comment" rows="3" placeholder="Type Comment"
 					class="form-control"></textarea>
 
 				<input id="groupNameInput" type="hidden" name="IssueId" value="@issueId">
