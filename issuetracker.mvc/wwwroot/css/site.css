@@ -23,10 +23,10 @@ body {
   overflow: hidden;
   display: none;
 }
-
+/* 
 #sidenvContainer {
   padding: 0 0.5rem;
-}
+} */
 
 #sidebar_toggle_btn {
   border-radius: 100%;
