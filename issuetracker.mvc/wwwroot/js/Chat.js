@@ -23,6 +23,8 @@ connection.on("ReceiveMessage", function (commentText, date, username, image) {
 
 	document.getElementById("CommentsDiv").insertAdjacentHTML("beforeend", newComment);
 	document.getElementById("CommentsDiv").scrollTop = document.getElementById("CommentsDiv").scrollHeight;
+	const sound = document.getElementById("audio");
+	sound.play();
 
 });
 
@@ -49,8 +51,6 @@ function submitComment(e) {
 	const issueId = e.target.IssueId.value;
 
 	const data = { Comment: comment, IssueId: issueId };
-
-	console.log(JSON.stringify(data));
 
 	fetch(`/issues/CreateComment?issueId=${issueId}`, {
 		method: 'POST',
