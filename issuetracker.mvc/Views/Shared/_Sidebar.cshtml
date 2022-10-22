@@ -1,6 +1,6 @@
 @inject SignInManager<AppUser> signInManager;
 
-<div class="border-2 border-end" id="sidenvContainer">
+<div class="border-2 border-end p-0 px-md-2" id="sidenvContainer">
 @if(signInManager.IsSignedIn(User))
 {
 	<div id="mySidenav" class="border-3 border-end  sidenav bg-light text-center ps-3 pe-1" style="position: fixed; left: 0; z-index: 10;">
@@ -43,12 +43,12 @@
 					&nbsp;Users
 				</a>
 			</div>
-			<div class="my-2">
+			@* <div class="my-2">
 				<a href="" class="btn w-100 text-start sidebarLink">
 					<i class="bi bi-files"></i>
 					&nbsp;Reports
 				</a>
-			</div>
+			</div> *@
 			
 				<div class="my-2">
 				<a asp-action="listroles" asp-controller="adminstration"
