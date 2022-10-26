@@ -13,11 +13,13 @@ public class AccountController : Controller
 {
 	private readonly UserManager<AppUser> userManager;
 	private readonly SignInManager<AppUser> signInManager;
+	private readonly RoleManager<IdentityRole> roleManager;
 
-	public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+	public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
 	{
 		this.userManager = userManager;
 		this.signInManager = signInManager;
+		this.roleManager = roleManager;
 	}
 
 
@@ -70,7 +72,19 @@ public class AccountController : Controller
 			return View(model);
 		}
 
-		await userManager.AddToRoleAsync(user, "member");
+
+
+		try
+		{
+			await userManager.AddToRoleAsync(user, "member");
+		}
+		catch (System.InvalidOperationException)
+		{
+			IdentityRole role = new() { Name = "member" };
+			await roleManager.CreateAsync(role);
+			await userManager.AddToRoleAsync(user, "member");
+		}
+
 
 		await signInManager.SignInAsync(user, isPersistent: false);
 
