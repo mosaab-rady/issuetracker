@@ -6,6 +6,7 @@
     <ProjectReference Include="..\issuetracker.Services\issuetracker.Services.csproj" />
     <ProjectReference Include="..\issuetracker.ViewModels\issuetracker.ViewModels.csproj" />
     <ProjectReference Include="..\issuetracker.Hubs\issuetracker.Hubs.csproj" />
+    <ProjectReference Include="..\issuetracker.Email\issuetracker.Email.csproj" />
   </ItemGroup>
 
   <ItemGroup>
