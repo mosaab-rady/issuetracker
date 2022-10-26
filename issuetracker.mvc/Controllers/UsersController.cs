@@ -1,3 +1,4 @@
+using issuetracker.Email;
 using issuetracker.Entities;
 using issuetracker.Services;
 using issuetracker.ViewModels;
@@ -13,12 +14,14 @@ public class UsersController : Controller
 	private readonly RoleManager<IdentityRole> roleManager;
 	private readonly IProjectsService projectsService;
 	private readonly IIssuesService issuesService;
-	public UsersController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IProjectsService projectsService, IIssuesService issuesService)
+	private readonly IEmailSender emailSender;
+	public UsersController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IProjectsService projectsService, IIssuesService issuesService, IEmailSender emailSender)
 	{
 		this.userManager = userManager;
 		this.roleManager = roleManager;
 		this.projectsService = projectsService;
 		this.issuesService = issuesService;
+		this.emailSender = emailSender;
 	}
 
 	[HttpGet]
@@ -123,6 +126,7 @@ public class UsersController : Controller
 			return View("NotFound");
 		}
 
+		DeleteImage(user.Image);
 
 		await userManager.DeleteAsync(user);
 
@@ -379,6 +383,9 @@ public class UsersController : Controller
 			if (availableIssuesToThisUser.Contains(issue) && assignedIssueViewModel.IsSelected && !user.AssignedIssues.Contains(issue))
 			{
 				await issuesService.AssignUser(user, issue.Id);
+				// send email to the assigned user
+				string issueUrl = $"{Request.Scheme}://{Request.Host}/issues/issue/{issue.Id}";
+				await emailSender.SendAssignToIssueAsync(user.Email, issueUrl, issue.Title, issue.Project.Name, User.Identity.Name, User.Identity.Name);
 			}
 			else if (availableIssuesToThisUser.Contains(issue) && !assignedIssueViewModel.IsSelected && user.AssignedIssues.Contains(issue))
 			{
@@ -390,6 +397,10 @@ public class UsersController : Controller
 
 	}
 
-
+	private void DeleteImage(string filename)
+	{
+		string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", filename);
+		System.IO.File.Delete(filePath);
+	}
 
 }
