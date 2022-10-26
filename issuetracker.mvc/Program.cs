@@ -1,4 +1,5 @@
 using issuetracker.Database;
+using issuetracker.Email;
 using issuetracker.Entities;
 using issuetracker.Hubs;
 using issuetracker.Services;
@@ -29,11 +30,14 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 
-builder.Services.AddTransient<IProjectsService, ProjectsService>();
-builder.Services.AddTransient<IIssuesService, IssuesService>();
-builder.Services.AddTransient<ITagsServices, TagsService>();
-builder.Services.AddTransient<IPriorityService, PriorityService>();
-builder.Services.AddTransient<IcommentsService, CommentsService>();
+builder.Services.AddScoped<IProjectsService, ProjectsService>();
+builder.Services.AddScoped<IIssuesService, IssuesService>();
+builder.Services.AddScoped<ITagsServices, TagsService>();
+builder.Services.AddScoped<IPriorityService, PriorityService>();
+builder.Services.AddScoped<IcommentsService, CommentsService>();
+
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddSignalR();
 
