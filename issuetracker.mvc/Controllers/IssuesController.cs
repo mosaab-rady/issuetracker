@@ -1,3 +1,4 @@
+using issuetracker.Email;
 using issuetracker.Entities;
 using issuetracker.Hubs;
 using issuetracker.Services;
@@ -22,7 +23,19 @@ public class IssuesController : Controller
 
 	private readonly IHubContext<ChatHub> hubContext;
 
-	public IssuesController(IIssuesService issuesService, IProjectsService projectsService, ITagsServices tagsServices, UserManager<AppUser> userManager, IPriorityService priorityService, IcommentsService commentsService, IHubContext<ChatHub> hubContext)
+	private readonly IEmailSender emailSender;
+
+	private readonly IConfiguration configuration;
+	public IssuesController(IIssuesService issuesService,
+												 IProjectsService projectsService,
+												 ITagsServices tagsServices,
+												 UserManager<AppUser> userManager,
+												 IPriorityService priorityService,
+												 IcommentsService commentsService,
+												 IHubContext<ChatHub> hubContext,
+												 IConfiguration configuration,
+												 IEmailSender emailSender
+												 )
 	{
 		this.issuesService = issuesService;
 		this.projectsService = projectsService;
@@ -31,6 +44,8 @@ public class IssuesController : Controller
 		this.priorityService = priorityService;
 		this.commentsService = commentsService;
 		this.hubContext = hubContext;
+		this.configuration = configuration;
+		this.emailSender = emailSender;
 	}
 
 	[HttpGet]
@@ -238,6 +253,16 @@ public class IssuesController : Controller
 
 		await issuesService.CreateIssueAsync(issue);
 
+		// send email to users that have a role of "manager"
+		IEnumerable<AppUser> managerUsers = await userManager.GetUsersInRoleAsync("manager");
+
+		string issueUrl = $"{Request.Scheme}://{Request.Host}/issues/issue/{issue.Id}";
+
+		foreach (var manager in managerUsers)
+		{
+			await emailSender.SendIssueCreatedAsync(manager.Email, issueUrl, project.Name);
+		}
+
 		return RedirectToAction("index", "issues");
 	}
 
@@ -315,6 +340,9 @@ public class IssuesController : Controller
 				if (editUserInIssueViewModel.IsSelected && !(issue.AssignedTo.Contains(user)))
 				{
 					await issuesService.AssignUser(user, issue.Id);
+					// send email to the assigned user
+					string issueUrl = $"{Request.Scheme}://{Request.Host}/issues/issue/{issue.Id}";
+					await emailSender.SendAssignToIssueAsync(user.Email, issueUrl, issue.Title, project.Name, User.Identity.Name, User.Identity.Name);
 				}
 				else if (!editUserInIssueViewModel.IsSelected && issue.AssignedTo.Contains(user))
 				{
