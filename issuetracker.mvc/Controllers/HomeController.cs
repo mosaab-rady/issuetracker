@@ -23,6 +23,7 @@ public class HomeController : Controller
 		this.projectsService = projectsService;
 	}
 
+	[Authorize(Roles = "manager")]
 	public async Task<IActionResult> Index()
 	{
 		DashboardViewModel model = new();
@@ -92,6 +93,7 @@ public class HomeController : Controller
 
 		return View(model);
 	}
+
 
 
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

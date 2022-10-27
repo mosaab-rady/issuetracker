@@ -48,6 +48,7 @@ public class IssuesController : Controller
 		this.emailSender = emailSender;
 	}
 
+	[Authorize(Roles = "manager")]
 	[HttpGet]
 	public async Task<IActionResult> Index(string project, string priority, string status)
 	{
@@ -209,13 +210,6 @@ public class IssuesController : Controller
 			return View(model);
 		}
 
-		var user = await userManager.Users.Include(x => x.AssignedProjects).SingleOrDefaultAsync(x => x.Email == User.Identity.Name);
-
-		if (!user.AssignedProjects.Contains(project))
-		{
-			ModelState.AddModelError("ProjectId", "sorry, you cant create issue in this project. you can only create issue in projects you are assigned to.");
-			return View(model);
-		}
 
 		issue.Project = project;
 
@@ -266,7 +260,7 @@ public class IssuesController : Controller
 		return RedirectToAction("index", "issues");
 	}
 
-
+	[Authorize(Roles = "manager, lead")]
 	[HttpGet]
 	public async Task<IActionResult> EditUsersInIssue(string issueId)
 	{
@@ -314,6 +308,7 @@ public class IssuesController : Controller
 		return View(model);
 	}
 
+	[Authorize(Roles = "manager, lead")]
 	[HttpPost]
 	public async Task<IActionResult> EditUsersInIssue(List<EditUserInIssueViewModel> model, string issueId)
 	{
@@ -361,7 +356,7 @@ public class IssuesController : Controller
 
 	}
 
-
+	[Authorize(Roles = "manager, lead")]
 	[HttpPost]
 	public async Task<IActionResult> DeleteIssue(string id)
 	{

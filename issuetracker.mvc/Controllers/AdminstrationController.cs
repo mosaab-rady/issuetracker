@@ -1,11 +1,13 @@
 using issuetracker.Entities;
 using issuetracker.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace issuetracker.mvc.Controllers;
 
+[Authorize(Roles = "manager")]
 public class AdminstrationController : Controller
 {
 	private readonly RoleManager<IdentityRole> roleManager;

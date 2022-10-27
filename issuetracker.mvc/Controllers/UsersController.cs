@@ -2,12 +2,14 @@ using issuetracker.Email;
 using issuetracker.Entities;
 using issuetracker.Services;
 using issuetracker.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace issuetracker.mvc.Controllers;
 
+[Authorize(Roles = "manager")]
 public class UsersController : Controller
 {
 	private readonly UserManager<AppUser> userManager;

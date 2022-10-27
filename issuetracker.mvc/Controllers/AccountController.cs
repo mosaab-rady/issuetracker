@@ -122,7 +122,12 @@ public class AccountController : Controller
 			return View(model);
 		}
 
-		return RedirectToAction("index", "home");
+		if (await userManager.IsInRoleAsync(user, "manager"))
+		{
+			return RedirectToAction("index", "home");
+		}
+
+		return RedirectToAction("dashboard", "home");
 
 	}
 
@@ -133,6 +138,15 @@ public class AccountController : Controller
 		await signInManager.SignOutAsync();
 
 		return RedirectToAction("index", "home");
+	}
+
+
+	[HttpGet]
+	public IActionResult AccessDenied()
+	{
+		ViewBag.Title = "Access Denied";
+		ViewBag.Text = "You do not have permission to access this resource";
+		return View();
 	}
 
 

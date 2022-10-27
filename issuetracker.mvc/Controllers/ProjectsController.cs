@@ -21,6 +21,7 @@ public class ProjectsController : Controller
 		this.userManager = userManager;
 	}
 
+	[Authorize(Roles = "manager")]
 	[HttpGet]
 	public async Task<IActionResult> Index()
 	{
@@ -134,14 +135,14 @@ public class ProjectsController : Controller
 	}
 
 
-
+	[Authorize(Roles = "manager")]
 	[HttpGet]
 	public IActionResult Create()
 	{
 		return View();
 	}
 
-
+	[Authorize(Roles = "manager")]
 	[HttpPost]
 	public async Task<IActionResult> Create(CreateProjectViewModel model)
 	{
@@ -168,7 +169,7 @@ public class ProjectsController : Controller
 
 
 
-
+	[Authorize(Roles = "manager")]
 	[HttpGet]
 	public async Task<IActionResult> EditUsersInProject(string projectId)
 	{
@@ -214,6 +215,7 @@ public class ProjectsController : Controller
 	}
 
 
+	[Authorize(Roles = "manager")]
 	[HttpPost]
 	public async Task<IActionResult> EditUsersInProject(List<EditUserInProjectViewModel> model, string projectId)
 	{
@@ -250,6 +252,7 @@ public class ProjectsController : Controller
 
 
 
+	[Authorize(Roles = "manager")]
 	[HttpPost]
 	public async Task<IActionResult> Delete(string id)
 	{
@@ -270,6 +273,7 @@ public class ProjectsController : Controller
 		return RedirectToAction("index", "projects");
 	}
 
+	[Authorize(Roles = "manager")]
 	[HttpGet]
 	public async Task<IActionResult> Edit(string id)
 	{
@@ -295,6 +299,7 @@ public class ProjectsController : Controller
 	}
 
 
+	[Authorize(Roles = "manager")]
 	[HttpPost]
 	public async Task<IActionResult> Edit(EditProjectViewModel model, string id)
 	{
