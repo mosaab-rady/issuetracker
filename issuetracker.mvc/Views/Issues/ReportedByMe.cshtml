@@ -1,0 +1,20 @@
+@model List<IssueViewModel>
+@{
+	ViewData["Title"] = "Reported By Me";
+}
+
+<div class="container-fluid my-3 px-4">
+	<div class="row">
+		<div class="col-md-8">
+			<h6>Issues Reported By Me</h6>
+			@if (Model.Any())
+			{
+				<partial name="_Issues" model="@Model" />
+			}
+			else
+			{
+				<p>You did not report about any issue</p>
+			}
+		</div>
+	</div>
+</div>
