@@ -13,12 +13,14 @@ namespace issuetracker.mvc.Controllers;
 public class ProjectsController : Controller
 {
 	private readonly IProjectsService projectsService;
+	private readonly IIssuesService issuesService;
 	private readonly UserManager<AppUser> userManager;
-	public ProjectsController(IProjectsService projectsService, UserManager<AppUser> userManager)
+	public ProjectsController(IProjectsService projectsService, UserManager<AppUser> userManager, IIssuesService issuesService)
 	{
 		this.projectsService = projectsService;
 
 		this.userManager = userManager;
+		this.issuesService = issuesService;
 	}
 
 	[Authorize(Roles = "manager")]
@@ -49,7 +51,7 @@ public class ProjectsController : Controller
 	[HttpGet]
 	public async Task<IActionResult> Project(string id)
 	{
-		Project project = await projectsService.GetOneProjectAsync(slug: id);
+		Project project = await projectsService.GetProjectWithUsersAsync(slug: id);
 
 		if (project == null)
 		{
@@ -62,7 +64,7 @@ public class ProjectsController : Controller
 		List<IssueViewModel> openIssues = new();
 		List<IssueViewModel> closedIssues = new();
 
-		foreach (var issue in project.Issues)
+		foreach (var issue in await issuesService.GetIssuesInProjectWithUsersAsync(project.Id))
 		{
 			IssueViewModel issueViewModel = new()
 			{
