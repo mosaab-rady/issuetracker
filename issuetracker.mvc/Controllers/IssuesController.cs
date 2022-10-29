@@ -156,6 +156,77 @@ public class IssuesController : Controller
 		return View(model);
 	}
 
+
+
+	[HttpGet]
+	public async Task<IActionResult> AssignedToMe()
+	{
+		var user = await userManager.Users
+		.Include(user => user.AssignedIssues)
+			.ThenInclude(issue => issue.Priority)
+		.Include(user => user.AssignedIssues)
+			.ThenInclude(issue => issue.Project)
+		.SingleOrDefaultAsync(user => user.Email == User.Identity.Name);
+
+		if (user is null)
+		{
+			ViewBag.Error = "somthing went wrong, please log out and try logging in again.";
+			return View("NotFound");
+		}
+
+		AssignedToMeViewModel model = new();
+
+		foreach (var issue in user.AssignedIssues)
+		{
+			IssueViewModel issueViewModel = new()
+			{
+				IssueId = issue.Id.ToString(),
+				Title = issue.Title,
+				ProjectName = issue.Project.Name,
+				Status = Enum.GetName(typeof(Status), issue.Status),
+				Priority = issue.Priority ?? new Priority() { Color = "#6699ff", Name = "Not Set" },
+			};
+
+			if (issue.TargetResolutionDate < DateTime.UtcNow && issue.Status == Status.Open)
+			{
+				model.OverDueIssues.Add(issueViewModel);
+			}
+
+			if (issue.Status == Status.Open)
+			{
+				model.OpenIssues.Add(issueViewModel);
+			}
+		}
+
+
+
+		return View(model);
+	}
+
+
+	[HttpGet]
+	public async Task<IActionResult> ReportedByMe()
+	{
+		var issues = await issuesService.GetIssuesReportedByUser(User.Identity.Name);
+		List<IssueViewModel> model = new();
+
+		foreach (var issue in issues)
+		{
+			IssueViewModel issueViewModel = new()
+			{
+				IssueId = issue.Id.ToString(),
+				Title = issue.Title,
+				ProjectName = issue.Project.Name,
+				Status = Enum.GetName(typeof(Status), issue.Status),
+				Priority = issue.Priority ?? new Priority() { Color = "#6699ff", Name = "Not Set" }
+			};
+
+			model.Add(issueViewModel);
+		}
+
+		return View(model);
+	}
+
 	[HttpGet]
 	public async Task<IActionResult> Create()
 	{
