@@ -1,7 +1,7 @@
 @inject SignInManager<AppUser> signInManager;
 
 <div class="border-2 border-end p-0 px-md-2" id="sidenvContainer">
-@if(signInManager.IsSignedIn(User))
+@if(signInManager.IsSignedIn(User) && User.IsInRole("manager"))
 {
 	<div id="mySidenav" class="border-3 border-end  sidenav bg-light text-center ps-3 pe-1" style="position: fixed; left: 0; z-index: 10;">
 
@@ -58,6 +58,37 @@
 				</a>
 			</div>
 
+		</div>
+	</div>
+}else{
+		
+	<div id="mySidenav" class="border-3 border-end  sidenav bg-light text-center ps-3 pe-1" style="position: fixed; left: 0; z-index: 10;">
+
+		<div class="mt-3 text-start">
+			<a asp-action="create" asp-controller="issues" class="btn btn-outline-danger rounded-3">Create New Issue</a>
+		</div>
+
+		<div class="mt-5">
+
+			<div class="my-2">
+
+					<a asp-action="assignedtome" asp-controller="issues" 
+					class=@(Context.Request.Path == "/issues/assignedtome" ? "btn-primary btn w-100 text-start" : "sidebarLink btn w-100 text-start")>
+						<i class="bi bi-person-fill"></i>
+						&nbsp;Assigned To Me
+					</a>
+
+			</div>
+
+			
+			<div class="my-2">
+				<a asp-action="reportedbyme" asp-controller="issues"
+					class=@(Context.Request.Path== "/issues/reportedbyme" ? "btn-primary btn w-100 text-start" : "sidebarLink btn w-100 text-start")>
+					<i class="bi bi-person-lines-fill"></i>
+					&nbsp;Reported By Me
+				</a>
+			</div>
+			
 		</div>
 	</div>
 }
