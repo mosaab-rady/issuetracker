@@ -48,18 +48,14 @@ public class ProjectsService : IProjectsService
 
 	public async Task<Project> GetOneProjectAsync(string slug)
 	{
-		var project = await context.Projects.Include(x => x.Issues)
-		.ThenInclude(issue => issue.Priority)
-		.Include(x => x.Issues)
-			.ThenInclude(issue => issue.AssignedTo)
-			.Include(x => x.AssignedTo)
-			.SingleOrDefaultAsync(e => e.Slug == slug);
+		var project = await context.Projects
+		.SingleOrDefaultAsync(project => project.Slug == slug);
 		return project;
 	}
 
 	public async Task<Project> GetProjectByIdAsync(Guid id)
 	{
-		var project = await context.Projects.Include(x => x.AssignedTo).Include(x => x.Issues).SingleOrDefaultAsync(x => x.Id == id);
+		var project = await context.Projects.SingleOrDefaultAsync(x => x.Id == id);
 		return project;
 	}
 
@@ -68,5 +64,25 @@ public class ProjectsService : IProjectsService
 		var EProject = await context.Projects.FindAsync(id);
 		EProject = project;
 		await context.SaveChangesAsync();
+	}
+
+	public async Task<Project> GetProjectByIdWithUsersAsync(Guid id)
+	{
+		var project = await context.Projects
+		.Include(project => project.AssignedTo)
+		.SingleOrDefaultAsync(project => project.Id == id);
+
+		return project;
+	}
+
+	public async Task<Project> GetProjectWithUsersAsync(string slug)
+	{
+		var project = await context.Projects
+			.Include(project => project.AssignedTo)
+			.SingleOrDefaultAsync(project => project.Slug == slug);
+
+		return project;
+
+
 	}
 }
