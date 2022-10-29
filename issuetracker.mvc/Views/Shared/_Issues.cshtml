@@ -7,13 +7,13 @@
 			<div class="col-md-4 col-3 fw-bold">@issue.Title</div>
 			<div class="col-md-4 col-3 ">@issue.ProjectName</div>
 			<div class="col-md-2 col-3 ">
-				<p class="@(issue.Status=="Closed" ? "bg-success" : "bg-danger") px-2 py-0 rounded my-0 text-lowercase boxshadow"
+				<p class="@(issue.Status=="Closed" ? "bg-success" : "bg-danger") px-2 py-0 rounded my-0 text-lowercase"
 				style="width: fit-content;">
 					@issue.Status
 				</p>
 			</div>
 			<div class="col-md-2 col-3 ">
-				<p class="px-2 py-0 rounded my-0 text-lowercase boxshadow"
+				<p class="px-2 py-0 rounded my-0 text-lowercase"
 				style="width: fit-content; background-color: @issue.Priority.Color;">
 					@issue.Priority.Name
 				</p>
