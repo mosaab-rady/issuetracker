@@ -127,7 +127,7 @@ public class AccountController : Controller
 			return RedirectToAction("index", "home");
 		}
 
-		return RedirectToAction("dashboard", "home");
+		return RedirectToAction("AssignedToMe", "issues");
 
 	}
 
