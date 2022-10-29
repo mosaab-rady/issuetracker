@@ -41,13 +41,18 @@ public class IssuesService : IIssuesService
 
 	public async Task<IEnumerable<Issue>> GetAllIssuesAsync()
 	{
-		var issues = await context.Issues.Include(x => x.Priority).Include(x => x.Project).Include(x => x.AssignedTo).ToListAsync();
+		var issues = await context.Issues
+			.Include(x => x.Priority)
+			.Include(x => x.Project)
+			.Include(x => x.AssignedTo)
+			.ToListAsync();
 		return issues;
 	}
 
 	public async Task<Issue> GetIssueByIdAsync(Guid id)
 	{
-		var issue = await context.Issues.Include(x => x.AssignedTo)
+		var issue = await context.Issues
+			.Include(x => x.AssignedTo)
 			.Include(x => x.Project)
 			.Include(x => x.Priority)
 			.Include(x => x.Tags)
@@ -62,5 +67,27 @@ public class IssuesService : IIssuesService
 		var EIssue = await context.Issues.FindAsync(id);
 		EIssue = issue;
 		await context.SaveChangesAsync();
+	}
+
+	public async Task<IEnumerable<Issue>> GetIssuesInProjectWithUsersAsync(Guid projectId)
+	{
+		var issues = await context.Issues
+			.Include(issue => issue.AssignedTo)
+			.Include(issue => issue.Priority)
+			.Where(issue => issue.Project.Id == projectId)
+			.ToListAsync();
+
+		return issues;
+	}
+
+	public async Task<IEnumerable<Issue>> GetIssuesReportedByUser(string email)
+	{
+		var issues = await context.Issues
+			.Include(issue => issue.Priority)
+			.Include(issue => issue.Project)
+			.Where(issue => issue.CreatedBy == email)
+			.ToListAsync();
+
+		return issues;
 	}
 }
