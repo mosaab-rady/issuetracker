@@ -5,6 +5,8 @@ using issuetracker.Services;
 using Microsoft.AspNetCore.Authorization;
 using issuetracker.ViewModels;
 using issuetracker.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace issuetracker.mvc.Controllers;
 
@@ -16,7 +18,10 @@ public class HomeController : Controller
 	private readonly IIssuesService issuesService;
 	private readonly IProjectsService projectsService;
 
-	public HomeController(ILogger<HomeController> logger, IProjectsService projectsService, IIssuesService issuesService)
+	public HomeController(ILogger<HomeController> logger,
+											 IProjectsService projectsService,
+											 IIssuesService issuesService
+											)
 	{
 		_logger = logger;
 		this.issuesService = issuesService;
@@ -69,21 +74,20 @@ public class HomeController : Controller
 				TargetEndDate = project.TargetEndDate,
 				ActaulEndDate = project.ActualEndDate,
 
-				ClosedIssues = (from issue in await issuesService.GetAllIssuesAsync()
-												where issue.Project.Id == project.Id && issue.Status == Status.Closed
+				ClosedIssues = (from issue in project.Issues
+												where issue.Status == Status.Closed
 												select issue).Count(),
 
-				OpenIssues = (from issue in await issuesService.GetAllIssuesAsync()
-											where issue.Project.Id == project.Id && issue.Status == Status.Open
+				OpenIssues = (from issue in project.Issues
+											where issue.Status == Status.Open
 											select issue).Count(),
 
-				UnAssignedIssues = (from issue in await issuesService.GetAllIssuesAsync()
-														where issue.Project.Id == project.Id && issue.AssignedTo.Count == 0
+				UnAssignedIssues = (from issue in project.Issues
+														where issue.AssignedTo.Count == 0
 														select issue).Count(),
 
-				OverdueIssues = (from issue in await issuesService.GetAllIssuesAsync()
-												 where issue.Project.Id == project.Id &&
-												 issue.TargetResolutionDate < DateTime.UtcNow &&
+				OverdueIssues = (from issue in project.Issues
+												 where issue.TargetResolutionDate < DateTime.UtcNow &&
 												 issue.Status == Status.Open
 												 select issue).Count(),
 			};
@@ -93,7 +97,6 @@ public class HomeController : Controller
 
 		return View(model);
 	}
-
 
 
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
