@@ -106,7 +106,7 @@
 				<div class="row">
 					@if (Model.OverDueIssues.Count > 0)
 					{
-						<div class="col">
+						<div class="col-md-11">
 							<partial name="_Issues" model="@Model.OverDueIssues" />
 						</div>
 					}
@@ -136,7 +136,7 @@
 				<div class="row">
 					@if (Model.UnAssignedIssued.Count > 0)
 					{
-						<div class="col">
+						<div class="col-md-11">
 							<partial name="_Issues" model="@Model.UnAssignedIssued" />
 						</div>
 					}
@@ -164,7 +164,7 @@
 				<div class="row">
 					@if (Model.OpenIssues.Count() > 0)
 					{
-						<div class="col">
+						<div class="col-md-11">
 							<partial name="_Issues" model="@Model.OpenIssues" />
 						</div>
 					}
@@ -189,7 +189,7 @@
 				<div class="row">
 					@if (Model.ClosedIssue.Count() > 0)
 					{
-						<div class="col">
+						<div class="col-md-11">
 							<partial name="_Issues" model="@Model.ClosedIssue" />
 						</div>
 					}
