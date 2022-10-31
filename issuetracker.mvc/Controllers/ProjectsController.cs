@@ -176,7 +176,7 @@ public class ProjectsController : Controller
 	public async Task<IActionResult> EditUsersInProject(string projectId)
 	{
 
-		var project = await projectsService.GetProjectByIdAsync(Guid.Parse(projectId));
+		var project = await projectsService.GetProjectByIdWithUsersAsync(Guid.Parse(projectId));
 
 		if (project == null)
 		{
