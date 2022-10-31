@@ -427,7 +427,7 @@ public class IssuesController : Controller
 
 	}
 
-	[Authorize(Roles = "manager, lead")]
+	[Authorize(Roles = "manager")]
 	[HttpPost]
 	public async Task<IActionResult> DeleteIssue(string id)
 	{
@@ -488,7 +488,7 @@ public class IssuesController : Controller
 		return RedirectToAction("issue", "issues", new { id = issue.Id });
 	}
 
-
+	[Authorize(Roles = "manager, lead")]
 	[HttpGet]
 	public async Task<IActionResult> Edit(string id)
 	{
@@ -505,7 +505,8 @@ public class IssuesController : Controller
 			Title = issue.Title,
 			Description = issue.Description,
 			TargetResolutionDate = issue.TargetResolutionDate,
-			Priorities = (await priorityService.GetAllPrioritiesAsync()).ToList()
+			Priorities = (await priorityService.GetAllPrioritiesAsync()).ToList(),
+			ResolutionSummary = issue.ResoliotionSummary
 		};
 
 		foreach (var tag in await tagsServices.GetAllTagsAsync())
@@ -538,7 +539,7 @@ public class IssuesController : Controller
 		return View(editIssueViewModel);
 	}
 
-
+	[Authorize(Roles = "manager, lead")]
 	[HttpPost]
 	public async Task<IActionResult> Edit(EditIssueViewModel model, string id)
 	{
@@ -556,6 +557,7 @@ public class IssuesController : Controller
 		issue.Title = model.Title;
 		issue.Description = model.Description;
 		issue.TargetResolutionDate = model.TargetResolutionDate.ToUniversalTime();
+		issue.ResoliotionSummary = model.ResolutionSummary;
 
 		if (model.CreateTagViewModel.Name != null)
 		{
