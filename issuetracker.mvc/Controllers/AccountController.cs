@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using issuetracker.Email;
 using issuetracker.Entities;
 using issuetracker.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -14,12 +15,14 @@ public class AccountController : Controller
 	private readonly UserManager<AppUser> userManager;
 	private readonly SignInManager<AppUser> signInManager;
 	private readonly RoleManager<IdentityRole> roleManager;
+	private readonly IEmailSender emailSender;
 
-	public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
+	public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager, IEmailSender emailSender)
 	{
 		this.userManager = userManager;
 		this.signInManager = signInManager;
 		this.roleManager = roleManager;
+		this.emailSender = emailSender;
 	}
 
 
@@ -85,11 +88,53 @@ public class AccountController : Controller
 			await userManager.AddToRoleAsync(user, "member");
 		}
 
+		var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+		var confiramtionLink = Url.Action("EmailConfirmed",
+																		"Account",
+																		new { userId = user.Id, token = token },
+																		Request.Scheme);
+
+
+		// send Email
+		await emailSender.SendConfirmationLink(user.Email, confiramtionLink);
+
+		return View("PleaseConfirmEmail");
+
+		// await signInManager.SignInAsync(user, isPersistent: false);
+
+		// return RedirectToAction("index", "home");
+
+	}
+
+	[HttpGet]
+	public async Task<IActionResult> EmailConfirmed(string userId, string token)
+	{
+		if (userId == null || token == null)
+		{
+			ViewBag.Error = "something went wrong please contact the site owner.";
+			return View("NotFound");
+		}
+
+		var user = await userManager.FindByIdAsync(userId);
+
+		if (user is null)
+		{
+			ViewBag.Error = $"No User found";
+			return View("NotFound");
+		}
+
+		var result = await userManager.ConfirmEmailAsync(user, token);
+
+		if (!result.Succeeded)
+		{
+			ViewBag.Error = "Email can not be confirmed";
+			return View("NotFound");
+		}
 
 		await signInManager.SignInAsync(user, isPersistent: false);
 
-		return RedirectToAction("index", "home");
-
+		return View();
 	}
 
 	[HttpGet]
@@ -110,6 +155,12 @@ public class AccountController : Controller
 		if (user == null)
 		{
 			ModelState.AddModelError("", "Invalid Email or Password.");
+			return View(model);
+		}
+
+		if (user != null && !user.EmailConfirmed && (await userManager.CheckPasswordAsync(user, model.Password)))
+		{
+			ModelState.AddModelError("", "Email not confirmed yet.");
 			return View(model);
 		}
 
