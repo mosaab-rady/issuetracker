@@ -25,6 +25,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
 	options.Password.RequireUppercase = false;
 	options.User.RequireUniqueEmail = true;
+	options.SignIn.RequireConfirmedEmail = true;
 })
 .AddEntityFrameworkStores<PostgresContext>()
 .AddDefaultTokenProviders();
