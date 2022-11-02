@@ -225,7 +225,7 @@ public class ProjectsController : Controller
 		if (!ModelState.IsValid) return View(model);
 
 
-		var project = await projectsService.GetProjectByIdAsync(Guid.Parse(projectId));
+		var project = await projectsService.GetProjectByIdWithUsersAsync(Guid.Parse(projectId));
 
 		if (project == null)
 		{
