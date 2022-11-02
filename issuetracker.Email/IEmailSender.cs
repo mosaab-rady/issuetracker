@@ -9,4 +9,6 @@ public interface IEmailSender
 														 string projectName,
 														 string fromEmail,
 														 string fromName);
+
+	Task SendConfirmationLink(string to, string link);
 }

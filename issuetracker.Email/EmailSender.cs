@@ -69,5 +69,12 @@ public class EmailSender : IEmailSender
 
 	}
 
+	public Task SendConfirmationLink(string to, string link)
+	{
+		string subject = "Confirm your email.";
 
+		string body = $"<div><h3>Thank you for signing up</h3><p>please click the link below to confirm your email</p> <a href='{link}'>Confirm</a></div>";
+
+		return Execute(to, subject, body, Options.SenderEmail, Options.SenderName);
+	}
 }
