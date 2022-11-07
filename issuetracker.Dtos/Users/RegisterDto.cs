@@ -12,6 +12,7 @@ public class RegisterDto
 	public string LastName { get; set; }
 
 	[Required]
+	[EmailAddress]
 	public string Email { get; set; }
 
 	[Required]
