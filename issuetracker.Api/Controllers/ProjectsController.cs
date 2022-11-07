@@ -50,21 +50,21 @@ public class ProjectsController : ControllerBase
 		if (project is null)
 		{
 			return Problem(
-				detail: "No project found with that ID.",
+				detail: $"No project found with this Id {id}.",
 				statusCode: StatusCodes.Status404NotFound);
 		}
 
 
-		var projectDto = mapper.Map<ProjectDto>(project);
+		ProjectWithUsersDto projectWithUsersDto = mapper.Map<ProjectWithUsersDto>(project);
 
-		foreach (var user in projectDto.AssignedTo)
+		foreach (var user in projectWithUsersDto.AssignedTo)
 		{
 			AppUser appUser = mapper.Map<AppUser>(user);
 			var roles = (await userManager.GetRolesAsync(appUser)).ToList();
 			user.Roles = roles;
 		}
 
-		return Ok(projectDto);
+		return Ok(projectWithUsersDto);
 	}
 
 	[Authorize(Roles = "manager")]
@@ -84,7 +84,7 @@ public class ProjectsController : ControllerBase
 		catch (DbUpdateException)
 		{
 			return Problem(
-				detail: $"A Project with the name {project.Name} already exist.",
+				detail: $"A Project with the name '{project.Name}' already exist. please choose anotheer name.",
 				statusCode: StatusCodes.Status400BadRequest);
 		}
 
@@ -112,6 +112,40 @@ public class ProjectsController : ControllerBase
 
 		return NoContent();
 	}
+
+	[Authorize(Roles = "manager")]
+	[HttpPut("{id}")]
+	public async Task<IActionResult> UpdateProjectById(UpdateProjectDto model, string id)
+	{
+		var existingProject = await projectsService.GetProjectByIdAsync(Guid.Parse(id));
+
+		if (existingProject is null)
+		{
+			return Problem(
+				detail: $"No Project found with this Id {id}.",
+				statusCode: StatusCodes.Status404NotFound);
+		}
+
+		existingProject.Name = model.Name;
+		existingProject.StartDate = model.StartDate.ToUniversalTime();
+		existingProject.ActualEndDate = model.ActualEndDate.ToUniversalTime();
+		existingProject.TargetEndDate = model.TargetEndDate.ToUniversalTime();
+
+		try
+		{
+			await projectsService.UpdateProjectByIdAsync(existingProject.Id, existingProject);
+		}
+		catch (DbUpdateException)
+		{
+			return Problem(
+				detail: $"A Project with the name '{model.Name}' already exist. please choose anotheer name.",
+				statusCode: StatusCodes.Status400BadRequest);
+		}
+
+
+		return Ok(mapper.Map<ProjectDto>(existingProject));
+	}
+
 
 
 	private string Slugify(string name)
