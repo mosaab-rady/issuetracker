@@ -12,5 +12,6 @@ public class MappingProfiles : Profile
 		CreateMap<AppUser, UserDto>();
 		CreateMap<UserDto, AppUser>();
 		CreateMap<CreateProjectDto, Project>();
+		CreateMap<Project,ProjectWithUsersDto>();
 	}
 }
