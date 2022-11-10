@@ -15,13 +15,19 @@ public class IssuesService : IIssuesService
 
 	public async Task AssignUser(AppUser user, Guid issueId)
 	{
-		var issue = await context.Issues.FindAsync(issueId);
+		var issue = await context.Issues
+		.Include(issue => issue.AssignedTo)
+		.SingleOrDefaultAsync(issue => issue.Id == issueId);
+
 		issue.AssignedTo.Add(user);
 		await context.SaveChangesAsync();
 	}
 	public async Task UnAssignUser(AppUser user, Guid issueId)
 	{
-		var issue = await context.Issues.FindAsync(issueId);
+		var issue = await context.Issues
+		.Include(issue => issue.AssignedTo)
+		.SingleOrDefaultAsync(issue => issue.Id == issueId);
+
 		issue.AssignedTo.Remove(user);
 		await context.SaveChangesAsync();
 	}
@@ -44,21 +50,77 @@ public class IssuesService : IIssuesService
 		var issues = await context.Issues
 			.Include(x => x.Priority)
 			.Include(x => x.Project)
-			.Include(x => x.AssignedTo)
 			.ToListAsync();
 		return issues;
 	}
 
-	public async Task<Issue> GetIssueByIdAsync(Guid id)
+	public async Task<Issue> GetIssueByIdWithUsersAsync(Guid id)
 	{
 		var issue = await context.Issues
-			.Include(x => x.AssignedTo)
-			.Include(x => x.Project)
-			.Include(x => x.Priority)
-			.Include(x => x.Tags)
-			.SingleOrDefaultAsync(x => x.Id == id);
+			.Include(issue => issue.AssignedTo)
+			.Include(issue => issue.Project)
+			.Include(issue => issue.Priority)
+			.Include(issue => issue.Tags)
+			.SingleOrDefaultAsync(issue => issue.Id == id);
 
 		return issue;
+	}
+
+	public async Task<Issue> GetIssueByIdAsync(Guid id)
+	{
+		Issue issue = await context.Issues
+		.Include(issue => issue.Priority)
+		.Include(issue => issue.Project)
+		.SingleOrDefaultAsync(issue => issue.Id == id);
+
+		return issue;
+	}
+
+	public async Task<Priority> GetIssuePriorityAsync(Guid id)
+	{
+		List<Priority> priorities = await context.Issues
+		.Where(issue => issue.Id == id)
+		.Take(1)
+		.Select(issue => issue.Priority)
+		.ToListAsync();
+
+
+
+		return priorities.FirstOrDefault();
+	}
+
+
+	public async Task<List<Tag>> GetIssueTagsAsync(Guid id)
+	{
+		List<List<Tag>> issuesTags = await context.Issues
+					.Where(issue => issue.Id == id)
+					.Take(1)
+					.Select(issue => issue.Tags)
+					.ToListAsync();
+
+		return issuesTags.FirstOrDefault();
+	}
+
+	public async Task<List<AppUser>> GetIssueUsersAsync(Guid id)
+	{
+		List<List<AppUser>> issuesUsers = await context.Issues
+		.Where(issue => issue.Id == id)
+		.Take(1)
+		.Select(issue => issue.AssignedTo)
+		.ToListAsync();
+
+		return issuesUsers.FirstOrDefault();
+	}
+
+	public async Task<Project> GetIssueProjectAsync(Guid id)
+	{
+		List<Project> issuesProjects = await context.Issues
+		.Where(issue => issue.Id == id)
+		.Take(1)
+		.Select(issue => issue.Project)
+		.ToListAsync();
+
+		return issuesProjects.FirstOrDefault();
 	}
 
 
@@ -89,5 +151,21 @@ public class IssuesService : IIssuesService
 			.ToListAsync();
 
 		return issues;
+	}
+
+	public async Task AssignTag(Tag tag, Guid issueId)
+	{
+		Issue issue = await context.Issues.Include(issue => issue.Tags).SingleOrDefaultAsync(issue => issue.Id == issueId);
+
+		issue.Tags.Add(tag);
+		await context.SaveChangesAsync();
+	}
+
+	public async Task UnAssignTag(Tag tag, Guid issueId)
+	{
+		Issue issue = await context.Issues.Include(issue => issue.Tags).SingleOrDefaultAsync(issue => issue.Id == issueId);
+
+		issue.Tags.Remove(tag);
+		await context.SaveChangesAsync();
 	}
 }
