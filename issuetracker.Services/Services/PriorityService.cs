@@ -34,9 +34,18 @@ public class PriorityService : IPriorityService
 		return Priorities;
 	}
 
+	public async Task<List<Issue>> GetIssuesWhithPriority(Guid priorityId)
+	{
+		List<List<Issue>> issues = await context.Priority.Where(priority => priority.Id == priorityId)
+		.Select(priority => priority.Issues)
+		.ToListAsync();
+
+		return issues.FirstOrDefault();
+	}
+
 	public async Task<Priority> GetPriorityByIdAsync(Guid id)
 	{
-		var priority = await context.Priority.Include(x => x.Issues).SingleOrDefaultAsync(x => x.Id == id);
+		var priority = await context.Priority.FindAsync(id);
 		return priority;
 	}
 

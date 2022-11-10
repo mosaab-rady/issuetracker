@@ -13,4 +13,5 @@ public interface IPriorityService
 	Task UpdatePriorityByIdAsync(Guid id, Priority priority);
 
 	Task DeletePriorityByIdAsync(Guid id);
+	Task<List<Issue>> GetIssuesWhithPriority(Guid priorityId);
 }
