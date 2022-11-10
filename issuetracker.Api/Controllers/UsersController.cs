@@ -62,6 +62,30 @@ public class UsersController : ControllerBase
 
 
 	// 3) get issues assigned to user
+	[HttpGet("{userId}/issues")]
+	public async Task<IActionResult> GetIssuesAssignedToUser(string userId)
+	{
+		AppUser appUser = await userManager.Users
+		.Include(user => user.AssignedIssues)
+		.ThenInclude(issue => issue.Priority)
+		.Include(user => user.AssignedIssues)
+		.ThenInclude(issue => issue.Project)
+		.SingleOrDefaultAsync(user => user.Id == userId);
+
+		if (appUser is null)
+		{
+			return Problem(
+				detail: $"No user found with this Id '{userId}'.",
+				statusCode: StatusCodes.Status404NotFound);
+		}
+
+
+
+		List<IssueDto> issueDtos = mapper.Map<List<IssueDto>>(appUser.AssignedIssues);
+
+		return Ok(issueDtos);
+
+	}
 
 	// 4) get projects assigned to user
 	[HttpGet("{id}/projects")]
