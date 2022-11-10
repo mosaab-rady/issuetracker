@@ -35,7 +35,7 @@ public class TagsService : ITagsServices
 
 	public async Task<Tag> GetTagByIdAsync(Guid id)
 	{
-		var tag = await context.Tags.Include(x => x.Issues).SingleOrDefaultAsync(x => x.Id == id);
+		var tag = await context.Tags.FindAsync(id);
 		return tag;
 	}
 
