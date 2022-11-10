@@ -15,4 +15,6 @@ public interface IProjectsService
 
 	Task AssignUser(AppUser user, Guid projectId);
 	Task UnAssignUser(AppUser user, Guid projectId);
+
+	Task<List<AppUser>> GetUsersInProjectAsync(Guid id);
 }
