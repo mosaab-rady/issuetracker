@@ -113,7 +113,7 @@ public class IssuesController : Controller
 	public async Task<IActionResult> Issue(string id)
 	{
 
-		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+		var issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(id));
 
 		if (issue == null)
 		{
@@ -335,7 +335,7 @@ public class IssuesController : Controller
 	[HttpGet]
 	public async Task<IActionResult> EditUsersInIssue(string issueId)
 	{
-		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(issueId));
+		var issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(issueId));
 
 		if (issue == null)
 		{
@@ -385,7 +385,7 @@ public class IssuesController : Controller
 	{
 		if (!ModelState.IsValid) return View(model);
 
-		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(issueId));
+		var issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(issueId));
 
 		if (issue == null)
 		{
@@ -431,7 +431,7 @@ public class IssuesController : Controller
 	[HttpPost]
 	public async Task<IActionResult> DeleteIssue(string id)
 	{
-		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+		var issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(id));
 		if (issue == null)
 		{
 			ViewBag.Error = $"No Issue found with this ID {id}."; ;
@@ -447,7 +447,7 @@ public class IssuesController : Controller
 	[HttpGet]
 	public async Task<IActionResult> CloseIssue(string id)
 	{
-		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+		var issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(id));
 		if (issue == null)
 		{
 			ViewBag.Error = $"No Issue found with this ID {id}";
@@ -471,7 +471,7 @@ public class IssuesController : Controller
 	{
 		if (!ModelState.IsValid) return View(model);
 
-		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+		var issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(id));
 		if (issue == null)
 		{
 			ViewBag.Error = $"No Issue found with this ID {id}";
@@ -492,7 +492,7 @@ public class IssuesController : Controller
 	[HttpGet]
 	public async Task<IActionResult> Edit(string id)
 	{
-		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+		var issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(id));
 		if (issue == null)
 		{
 			ViewBag.Error = $"No Issue found with this ID {id}.";
@@ -545,7 +545,7 @@ public class IssuesController : Controller
 	{
 		if (!ModelState.IsValid) return View(model);
 
-		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(id));
+		var issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(id));
 
 		if (issue == null)
 		{
@@ -613,7 +613,7 @@ public class IssuesController : Controller
 	[HttpGet]
 	public async Task<IActionResult> Comments(string issueId)
 	{
-		var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(issueId));
+		var issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(issueId));
 
 		if (issue == null)
 		{
@@ -662,7 +662,7 @@ public class IssuesController : Controller
 			return View("NotFound");
 		}
 
-		Issue issue = await issuesService.GetIssueByIdAsync(Guid.Parse(issueId));
+		Issue issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(issueId));
 		if (user == null)
 		{
 			ViewBag.Error = $"No Issue found with this Id {issueId}.";

@@ -381,7 +381,7 @@ public class UsersController : Controller
 
 		foreach (var assignedIssueViewModel in model)
 		{
-			var issue = await issuesService.GetIssueByIdAsync(Guid.Parse(assignedIssueViewModel.IssueId));
+			var issue = await issuesService.GetIssueByIdWithUsersAsync(Guid.Parse(assignedIssueViewModel.IssueId));
 			if (availableIssuesToThisUser.Contains(issue) && assignedIssueViewModel.IsSelected && !user.AssignedIssues.Contains(issue))
 			{
 				await issuesService.AssignUser(user, issue.Id);
