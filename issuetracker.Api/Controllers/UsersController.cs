@@ -134,4 +134,66 @@ public class UsersController : ControllerBase
 
 	// 6) update user by id
 
+
+
+	// 7) Edit Roles for users
+	[HttpPost("{userId}/editroles")]
+	public async Task<IActionResult> EditRolesInUser(List<AssignRoleDto> assignRoleDtos, string userId)
+	{
+		AppUser appUser = await userManager.FindByIdAsync(userId);
+
+		if (appUser is null)
+		{
+			return Problem(
+				detail: $"No user found with this Id '{userId}'.",
+				statusCode: StatusCodes.Status404NotFound);
+		}
+
+		List<string> userRoles = (await userManager.GetRolesAsync(appUser)).ToList();
+
+		foreach (AssignRoleDto assignRoleDto in assignRoleDtos)
+		{
+			IdentityRole identityRole = await roleManager.FindByIdAsync(assignRoleDto.RoleId);
+
+			if (identityRole is null)
+			{
+				return Problem(
+					detail: $"No Role found with this Id '{assignRoleDto.RoleId}'.",
+					statusCode: StatusCodes.Status404NotFound);
+			}
+
+			if (assignRoleDto.IsSelected && !userRoles.Contains(assignRoleDto.Name))
+			{
+				await userManager.AddToRoleAsync(appUser, assignRoleDto.Name);
+			}
+			else if (!assignRoleDto.IsSelected && userRoles.Contains(assignRoleDto.Name))
+			{
+				await userManager.RemoveFromRoleAsync(appUser, assignRoleDto.Name);
+			}
+		}
+
+		userRoles = (await userManager.GetRolesAsync(appUser)).ToList();
+
+		return Ok(userRoles);
+	}
+
+	// 8) Get Roles In User
+	[HttpGet("{userId}/roles")]
+	public async Task<IActionResult> GetUserRoles(string userId)
+	{
+		AppUser appUser = await userManager.FindByIdAsync(userId);
+
+		if (appUser is null)
+		{
+			return Problem(
+				detail: $"No user found with this Id '{userId}'.",
+				statusCode: StatusCodes.Status404NotFound);
+		}
+
+		List<string> userRoles = (await userManager.GetRolesAsync(appUser)).ToList();
+
+		return Ok(userRoles);
+
+	}
+
 }
