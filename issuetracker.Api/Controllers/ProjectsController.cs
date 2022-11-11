@@ -29,6 +29,7 @@ public class ProjectsController : ControllerBase
 	}
 
 
+	// 1) get all projects
 	[Authorize(Roles = "manager")]
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<Project>>> GetAllProjects()
@@ -41,7 +42,7 @@ public class ProjectsController : ControllerBase
 	}
 
 
-
+	// 2) get project by id
 	[HttpGet("{id}")]
 	[Authorize(Roles = "manager")]
 	public async Task<IActionResult> GetProjectById(Guid id)
@@ -69,6 +70,8 @@ public class ProjectsController : ControllerBase
 		return Ok(projectDto);
 	}
 
+
+	// 3) Create Project
 	[Authorize(Roles = "manager")]
 	[HttpPost]
 	public async Task<IActionResult> CreateProject(CreateProjectDto model)
@@ -96,6 +99,7 @@ public class ProjectsController : ControllerBase
 	}
 
 
+	// 4) delete Project
 	[Authorize(Roles = "manager")]
 	[HttpDelete("{id}")]
 	public async Task<IActionResult> DeleteProjectById(Guid id)
@@ -115,7 +119,7 @@ public class ProjectsController : ControllerBase
 	}
 
 
-
+	// 5) update Project
 	[Authorize(Roles = "manager")]
 	[HttpPut("{id}")]
 	public async Task<IActionResult> UpdateProjectById(UpdateProjectDto model, Guid id)
@@ -150,7 +154,7 @@ public class ProjectsController : ControllerBase
 	}
 
 
-	// get users assigned to project
+	// 6) get users assigned to project
 	[HttpGet("{projectId}/users")]
 	public async Task<IActionResult> GetUsersInProject(Guid projectId)
 	{
@@ -177,7 +181,7 @@ public class ProjectsController : ControllerBase
 	}
 
 
-	// Edit Users In Project
+	// 7) Edit Users In Project
 	[HttpPost("{projectId}/EditUsers")]
 	[Authorize(Roles = "manager")]
 	public async Task<IActionResult> EditUsersInProject(List<AssignUserDto> assignUserDtos, Guid projectId)
@@ -221,6 +225,26 @@ public class ProjectsController : ControllerBase
 		return Ok(userDtos);
 	}
 
+
+	// 8) Get Issues In Project
+	[HttpGet("{projectId}/issues")]
+	public async Task<IActionResult> GetIssuesInProject(Guid projectId)
+	{
+		Project project = await projectsService.GetProjectByIdAsync(projectId);
+
+		if (project is null)
+		{
+			return Problem(
+				detail: $"No Project found with this Id '{projectId}'.",
+				statusCode: StatusCodes.Status404NotFound);
+		}
+
+		List<Issue> issues = await projectsService.GetIssuesInProjectAsync(projectId);
+
+		List<IssueDto> issueDtos = mapper.Map<List<IssueDto>>(issues);
+
+		return Ok(issueDtos);
+	}
 	private string Slugify(string name)
 	{
 		SlugHelper helper = new();
