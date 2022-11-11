@@ -101,4 +101,16 @@ public class ProjectsService : IProjectsService
 
 		return users.FirstOrDefault();
 	}
+
+	public async Task<List<Issue>> GetIssuesInProjectAsync(Guid id)
+	{
+		List<List<Issue>> issues = await context.Projects
+		.Where(project => project.Id == id)
+		.Include(project => project.Issues)
+		.ThenInclude(issue => issue.Priority)
+		.Select(project => project.Issues)
+		.ToListAsync();
+
+		return issues.FirstOrDefault();
+	}
 }
