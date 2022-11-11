@@ -1,6 +1,7 @@
 using AutoMapper;
 using issuetracker.Dtos;
 using issuetracker.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace issuetracker.Api.Helpers;
 
@@ -25,5 +26,8 @@ public class MappingProfiles : Profile
 
 		CreateMap<CreateIssueDto, Issue>();
 
+
+		CreateMap<IdentityRole, RoleDto>();
+		CreateMap<CreateRoleDto, IdentityRole>();
 	}
 }
