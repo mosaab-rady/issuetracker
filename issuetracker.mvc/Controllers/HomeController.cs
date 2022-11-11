@@ -44,6 +44,8 @@ public class HomeController : Controller
 				Title = issue.Title
 			};
 
+			issue.AssignedTo = await issuesService.GetIssueUsersAsync(issue.Id);
+
 			if (issue.AssignedTo.Count() == 0)
 			{
 				model.UnAssignedIssues.Add(issueViewModel);
@@ -66,6 +68,8 @@ public class HomeController : Controller
 
 		foreach (var project in await projectsService.GetAllProjectsAsync())
 		{
+			project.Issues = await projectsService.GetIssuesInProjectAsync(project.Id);
+
 			ProjectOverviewViewModel projectOverviewViewModel = new()
 			{
 				ProjectID = project.Id.ToString(),
