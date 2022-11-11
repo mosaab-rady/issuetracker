@@ -293,7 +293,7 @@ public class IssuesController : ControllerBase
 
 
 	// 11) Update Issue Priority
-	[HttpPut("{issueId}/Priority")]
+	[HttpPost("{issueId}/Priority")]
 	[Authorize(Roles = "manager")]
 	public async Task<IActionResult> UpdateIssuePriority(AssignPriorityDto assignPriorityDto, Guid issueId)
 	{
@@ -326,7 +326,7 @@ public class IssuesController : ControllerBase
 
 
 	// 12) Update Issue Tags
-	[HttpPut("{issueId}/tags")]
+	[HttpPost("{issueId}/tags")]
 	[Authorize(Roles = "manager")]
 	public async Task<IActionResult> UpdateIssueTags(List<AssignTagDto> assignTagDtos, Guid issueId)
 	{
