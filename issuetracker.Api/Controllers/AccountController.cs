@@ -29,6 +29,20 @@ public class AccountController : ControllerBase
 		this.mapper = mapper;
 	}
 
+	[HttpGet("isAuthenticted")]
+	public async Task<ActionResult<UserDto>> IsAuthenticated()
+	{
+		if (User.Identity.IsAuthenticated)
+		{
+			AppUser user = await userManager.FindByEmailAsync(User.Identity.Name);
+			UserDto userDto = mapper.Map<UserDto>(user);
+			userDto.Roles = (await userManager.GetRolesAsync(user)).ToList();
+
+			return userDto;
+		}
+		return Unauthorized();
+	}
+
 	[HttpPost("login")]
 	public async Task<IActionResult> LogIn(LoginDto model)
 	{
