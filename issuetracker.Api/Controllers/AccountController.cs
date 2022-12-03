@@ -44,7 +44,7 @@ public class AccountController : ControllerBase
 	}
 
 	[HttpPost("login")]
-	public async Task<IActionResult> LogIn(LoginDto model)
+	public async Task<ActionResult<UserDto>> LogIn(LoginDto model)
 	{
 		var user = await userManager.FindByEmailAsync(model.Email);
 
@@ -74,7 +74,7 @@ public class AccountController : ControllerBase
 		UserDto userDto = mapper.Map<UserDto>(user);
 		userDto.Roles = (await userManager.GetRolesAsync(user)).ToList();
 
-		return Ok(userDto);
+		return userDto;
 
 	}
 
