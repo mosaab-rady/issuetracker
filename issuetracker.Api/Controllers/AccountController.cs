@@ -1,13 +1,12 @@
+using System.Web;
 using AutoMapper;
+using issuetracker.Aws;
 using issuetracker.Dtos;
 using issuetracker.Email;
 using issuetracker.Entities;
-using issuetracker.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 
 namespace issuetracker.Api.Controllers;
 
@@ -20,13 +19,24 @@ public class AccountController : ControllerBase
 	private readonly SignInManager<AppUser> signInManager;
 	private readonly IEmailSender emailSender;
 	private readonly IMapper mapper;
-	public AccountController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<AppUser> signInManager, IEmailSender emailSender, IMapper mapper)
+	private readonly IConfiguration configuration;
+	private readonly IS3Client s3Client;
+	public AccountController(
+		UserManager<AppUser> userManager,
+		RoleManager<IdentityRole> roleManager,
+		SignInManager<AppUser> signInManager,
+		IEmailSender emailSender,
+		IMapper mapper,
+		IConfiguration configuration,
+		IS3Client s3Client)
 	{
 		this.userManager = userManager;
 		this.roleManager = roleManager;
 		this.signInManager = signInManager;
 		this.emailSender = emailSender;
 		this.mapper = mapper;
+		this.configuration = configuration;
+		this.s3Client = s3Client;
 	}
 
 	[HttpGet("isAuthenticted")]
@@ -91,21 +101,20 @@ public class AccountController : ControllerBase
 	}
 
 	[HttpPost("signup")]
-	public async Task<IActionResult> Signup(RegisterDto model)
+	public async Task<IActionResult> Signup([FromForm] RegisterDto model)
 	{
 
 		string imageUrl = "";
 
 		if (model.Image != null)
 		{
+			if (!model.Image.ContentType.StartsWith("image"))
+			{
+				return Problem(
+					detail: "Image field must be an image.",
+					statusCode: StatusCodes.Status400BadRequest);
+			}
 			imageUrl = await ProcessUploadImage(model.Image, $"{model.FirstName}--{model.LastName}");
-		}
-
-		if (!ModelState.IsValid)
-		{
-			return Problem(
-				detail: ModelState["Image"].ToString(),
-				statusCode: StatusCodes.Status400BadRequest);
 		}
 
 		AppUser user = new()
@@ -123,13 +132,14 @@ public class AccountController : ControllerBase
 		{
 			if (model.Image != null)
 			{
-				DeleteImage(imageUrl);
+				await DeleteImageAsync(imageUrl);
 			}
+			List<string> errors = new List<string>();
 			foreach (var err in result.Errors)
 			{
-				ModelState.AddModelError(err.Code, err.Description);
+				errors.Add(err.Description);
 			}
-			return BadRequest(ModelState);
+			return BadRequest(error: new { errors = errors });
 		}
 
 
@@ -144,12 +154,16 @@ public class AccountController : ControllerBase
 			await userManager.AddToRoleAsync(user, "member");
 		}
 
-		var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+		string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-		var confiramtionLink = Url.Action("EmailConfirmed",
-																		"Account",
-																		new { userId = user.Id, token = token },
-																		Request.Scheme);
+		string code = HttpUtility.UrlEncode(token);
+
+		string url = configuration["UI:Url"];
+
+		string confiramtionLink = $"{url}/email-confirmed?userId={user.Id}&token={code}";
+
+
+		// var confiramtionLink = Url.Action("EmailConfirmed", "/Account", new { userId = user.Id, token = token }, Request.Scheme);
 
 
 		// send Email
@@ -173,7 +187,7 @@ public class AccountController : ControllerBase
 		return NoContent();
 	}
 
-
+	// identity redirect url
 	[AcceptVerbs("GET", "POST")]
 	[Route("notloggedin")]
 	public IActionResult NotLoggedIn()
@@ -225,26 +239,24 @@ public class AccountController : ControllerBase
 
 	private async Task<string> ProcessUploadImage(IFormFile model, string name)
 	{
-		if (!model.ContentType.StartsWith("image"))
-		{
-			ModelState.AddModelError("Image", $"Image field must be an Image.");
-			return name;
-		}
+		return await s3Client.UploadImage(model, name);
 
-		string uniqueFileName = $"{name}-{DateTimeOffset.UtcNow.Ticks}.jpeg";
-		string FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", uniqueFileName);
+		// string uniqueFileName = $"{name}-{DateTimeOffset.UtcNow.Ticks}.jpeg";
+		// string FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", uniqueFileName);
 
-		using var image = Image.Load(model.OpenReadStream());
-		image.Mutate(img => img.Resize(250, 250));
-		await image.SaveAsJpegAsync(FilePath);
+		// using var image = Image.Load(model.OpenReadStream());
+		// image.Mutate(img => img.Resize(250, 250));
+		// await image.SaveAsJpegAsync(FilePath);
 
-		return uniqueFileName;
+		// return uniqueFileName;
 	}
 
-	private void DeleteImage(string filename)
+	private async Task DeleteImageAsync(string filename)
 	{
-		string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", filename);
-		System.IO.File.Delete(filePath);
+		await s3Client.DeleteImage(filename);
+
+		// string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", filename);
+		// System.IO.File.Delete(filePath);
 	}
 
 }
