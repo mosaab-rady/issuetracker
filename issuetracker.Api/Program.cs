@@ -1,11 +1,12 @@
-using System.Text.Json.Serialization;
 using issuetracker.Api.Helpers;
+using issuetracker.Aws;
 using issuetracker.Database;
 using issuetracker.Email;
 using issuetracker.Entities;
 using issuetracker.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+// using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.AddCors(options =>
 {
 	options.AddPolicy(name: MyAllowSpecificOrigins, policy =>
 	{
-		policy.WithOrigins("http://localhost:4200");
+		policy.WithOrigins(builder.Configuration["UI:Url"]);
 		policy.AllowAnyHeader();
 		policy.AllowCredentials();
 	});
@@ -25,8 +26,10 @@ builder.Services.AddCors(options =>
 
 // Add services to the container.
 
-builder.Services.AddControllers()
-	.AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers();
+// .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -63,6 +66,7 @@ builder.Services.AddScoped<IPriorityService, PriorityService>();
 builder.Services.AddScoped<IcommentsService, CommentsService>();
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IS3Client, S3Client>();
 
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -97,6 +101,16 @@ if (app.Environment.IsDevelopment())
 	// app.UseSwagger();
 	// app.UseSwaggerUI();
 }
+
+
+// For serving Images incase of storing locally
+
+// app.UseFileServer(new FileServerOptions
+// {
+// 	FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+// 	RequestPath = "/wwwroot",
+// 	EnableDefaultFiles = true
+// });
 
 app.UseHttpsRedirection();
 
