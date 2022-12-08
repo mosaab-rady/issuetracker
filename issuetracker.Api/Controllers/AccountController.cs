@@ -43,6 +43,18 @@ public class AccountController : ControllerBase
 		return Unauthorized();
 	}
 
+	[HttpGet("isEmailUsed")]
+	public async Task<Boolean> IsEmailUsed(string email)
+	{
+		var user = await userManager.FindByEmailAsync(email);
+
+		if (user is null)
+		{
+			return false;
+		}
+		return true;
+	}
+
 	[HttpPost("login")]
 	public async Task<ActionResult<UserDto>> LogIn(LoginDto model)
 	{
