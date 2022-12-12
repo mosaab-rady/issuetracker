@@ -32,13 +32,13 @@ public class ProjectsController : ControllerBase
 	// 1) get all projects
 	[Authorize(Roles = "manager")]
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<ProjectDto>>> GetAllProjects()
+	public async Task<IEnumerable<ProjectDto>> GetAllProjects()
 	{
 		var projects = await projectsService.GetAllProjectsAsync();
 
 		IEnumerable<ProjectDto> model = mapper.Map<IEnumerable<ProjectDto>>(projects);
 
-		return Ok(model);
+		return model;
 	}
 
 
