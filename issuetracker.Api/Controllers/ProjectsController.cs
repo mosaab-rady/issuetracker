@@ -45,7 +45,7 @@ public class ProjectsController : ControllerBase
 	// 2) get project by id
 	[HttpGet("{id}")]
 	[Authorize(Roles = "manager")]
-	public async Task<IActionResult> GetProjectById(Guid id)
+	public async Task<ActionResult<ProjectDto>> GetProjectById(Guid id)
 	{
 		var project = await projectsService.GetProjectByIdAsync(id);
 
@@ -67,7 +67,7 @@ public class ProjectsController : ControllerBase
 		// 	user.Roles = roles;
 		// }
 
-		return Ok(projectDto);
+		return projectDto;
 	}
 
 
@@ -122,7 +122,7 @@ public class ProjectsController : ControllerBase
 	// 5) update Project
 	[Authorize(Roles = "manager")]
 	[HttpPut("{id}")]
-	public async Task<IActionResult> UpdateProjectById(UpdateProjectDto model, Guid id)
+	public async Task<ActionResult<ProjectDto>> UpdateProjectById(UpdateProjectDto model, Guid id)
 	{
 		var existingProject = await projectsService.GetProjectByIdAsync(id);
 
@@ -150,7 +150,7 @@ public class ProjectsController : ControllerBase
 		}
 
 
-		return Ok(mapper.Map<ProjectDto>(existingProject));
+		return mapper.Map<ProjectDto>(existingProject);
 	}
 
 
