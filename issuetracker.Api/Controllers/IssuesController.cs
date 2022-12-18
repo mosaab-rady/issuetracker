@@ -35,20 +35,20 @@ public class IssuesController : ControllerBase
 	// 1) get all Issues
 	[HttpGet]
 	[Authorize(Roles = "manager")]
-	public async Task<IActionResult> GetAllIssues()
+	public async Task<IEnumerable<IssueDto>> GetAllIssues()
 	{
 		IEnumerable<Issue> issues = await issuesService.GetAllIssuesAsync();
 
 		IEnumerable<IssueDto> issueDtos = mapper.Map<IEnumerable<IssueDto>>(issues);
 
-		return Ok(issueDtos);
+		return issueDtos;
 
 	}
 
 
 	// 2) get issue By Id
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetIssueById(Guid id)
+	public async Task<ActionResult<IssueDto>> GetIssueById(Guid id)
 	{
 		Issue issue = await issuesService.GetIssueByIdAsync(id);
 
@@ -61,7 +61,7 @@ public class IssuesController : ControllerBase
 
 		IssueDto issueDto = mapper.Map<IssueDto>(issue);
 
-		return Ok(issueDto);
+		return issueDto;
 	}
 
 
@@ -94,7 +94,7 @@ public class IssuesController : ControllerBase
 	// 4) update Issue
 	[HttpPut("{id}")]
 	[Authorize(Roles = "manager")]
-	public async Task<IActionResult> UpdateIssueById(UpdateIssueDto updateIssueDto, Guid id)
+	public async Task<ActionResult<IssueDto>> UpdateIssueById(UpdateIssueDto updateIssueDto, Guid id)
 	{
 		Issue issue = await issuesService.GetIssueByIdAsync(id);
 
@@ -108,13 +108,12 @@ public class IssuesController : ControllerBase
 		issue.Title = updateIssueDto.Title;
 		issue.Description = updateIssueDto.Description;
 		issue.TargetResolutionDate = updateIssueDto.TargetResolutionDate.ToUniversalTime();
-		issue.ActualResolutionDate = updateIssueDto.ActualResolutionDate.ToUniversalTime();
 
 		await issuesService.UpdateIssueByIdAsync(issue.Id, issue);
 
 
 		IssueDto issueDto = mapper.Map<IssueDto>(issue);
-		return Ok(issueDto);
+		return issueDto;
 	}
 
 
@@ -376,7 +375,7 @@ public class IssuesController : ControllerBase
 
 	// 13) close Issue
 	[HttpPost("{id}/close")]
-	public async Task<IActionResult> CloseIssue(Guid id)
+	public async Task<ActionResult<IssueDto>> CloseIssue(Guid id)
 	{
 		Issue issue = await issuesService.GetIssueByIdAsync(id);
 
@@ -388,12 +387,13 @@ public class IssuesController : ControllerBase
 		}
 
 		issue.Status = Status.Closed;
+		issue.ActualResolutionDate = DateTime.UtcNow;
 
 		await issuesService.UpdateIssueByIdAsync(id, issue);
 
 		IssueDto issueDto = mapper.Map<IssueDto>(issue);
 
-		return Ok(issueDto);
+		return issueDto;
 	}
 
 
