@@ -14,7 +14,5 @@ public class UpdateIssueDto
 
 	public DateTime TargetResolutionDate { get; set; }
 
-	public DateTime ActualResolutionDate { get; set; }
-
 	public string ResoliotionSummary { get; set; }
 }
