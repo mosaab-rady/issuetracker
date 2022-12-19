@@ -26,24 +26,24 @@ public class UsersController : ControllerBase
 
 	// 1) get all users
 	[HttpGet]
-	public async Task<IActionResult> GetAllUsers()
+	public async Task<IEnumerable<UserDto>> GetAllUsers()
 	{
-		List<AppUser> users = await userManager.Users.ToListAsync();
+		IEnumerable<AppUser> users = await userManager.Users.ToListAsync();
 
-		List<UserDto> usersDto = mapper.Map<List<UserDto>>(users);
+		IEnumerable<UserDto> usersDto = mapper.Map<IEnumerable<UserDto>>(users);
 
 		foreach (var user in usersDto)
 		{
 			user.Roles = (await userManager.GetRolesAsync(mapper.Map<AppUser>(user))).ToList();
 		}
 
-		return Ok(usersDto);
+		return usersDto;
 	}
 
 
 	// 2) get user by Id
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetUserById(string id)
+	public async Task<ActionResult<UserDto>> GetUserById(string id)
 	{
 		AppUser user = await userManager.FindByIdAsync(id);
 
@@ -57,13 +57,13 @@ public class UsersController : ControllerBase
 		UserDto userDto = mapper.Map<UserDto>(user);
 		userDto.Roles = (await userManager.GetRolesAsync(user)).ToList();
 
-		return Ok(userDto);
+		return userDto;
 	}
 
 
 	// 3) get issues assigned to user
 	[HttpGet("{userId}/issues")]
-	public async Task<IActionResult> GetIssuesAssignedToUser(string userId)
+	public async Task<ActionResult<List<IssueDto>>> GetIssuesAssignedToUser(string userId)
 	{
 		AppUser appUser = await userManager.Users
 		.Include(user => user.AssignedIssues)
@@ -83,13 +83,13 @@ public class UsersController : ControllerBase
 
 		List<IssueDto> issueDtos = mapper.Map<List<IssueDto>>(appUser.AssignedIssues);
 
-		return Ok(issueDtos);
+		return issueDtos;
 
 	}
 
 	// 4) get projects assigned to user
 	[HttpGet("{id}/projects")]
-	public async Task<IActionResult> GetProjectAssignedToUser(string id)
+	public async Task<ActionResult<List<ProjectDto>>> GetProjectAssignedToUser(string id)
 	{
 		AppUser appUser = await userManager.Users.Include(user => user.AssignedProjects)
 																					 .SingleOrDefaultAsync(user => user.Id == id);
@@ -103,7 +103,7 @@ public class UsersController : ControllerBase
 
 		List<ProjectDto> projectDtos = mapper.Map<List<ProjectDto>>(appUser.AssignedProjects);
 
-		return Ok(projectDtos);
+		return projectDtos;
 	}
 
 

@@ -218,7 +218,7 @@ public class IssuesController : ControllerBase
 
 	// 8) Get Issue Project
 	[HttpGet("{id}/project")]
-	public async Task<IActionResult> GetIssueProject(Guid id)
+	public async Task<ActionResult<ProjectDto>> GetIssueProject(Guid id)
 	{
 		Issue issue = await issuesService.GetIssueByIdAsync(id);
 
@@ -233,7 +233,7 @@ public class IssuesController : ControllerBase
 
 		ProjectDto projectDto = mapper.Map<ProjectDto>(project);
 
-		return Ok(projectDto);
+		return projectDto;
 	}
 
 
@@ -267,7 +267,7 @@ public class IssuesController : ControllerBase
 
 	// 10) Get Issue Users
 	[HttpGet("{id}/users")]
-	public async Task<IActionResult> GetUsersAssignedToIssue(Guid id)
+	public async Task<ActionResult<List<UserDto>>> GetUsersAssignedToIssue(Guid id)
 	{
 		Issue issue = await issuesService.GetIssueByIdAsync(id);
 
@@ -287,7 +287,7 @@ public class IssuesController : ControllerBase
 			user.Roles = (await userManager.GetRolesAsync(mapper.Map<AppUser>(user))).ToList();
 		}
 
-		return Ok(userDtos);
+		return userDtos;
 	}
 
 

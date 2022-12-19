@@ -156,7 +156,7 @@ public class ProjectsController : ControllerBase
 
 	// 6) get users assigned to project
 	[HttpGet("{projectId}/users")]
-	public async Task<IActionResult> GetUsersInProject(Guid projectId)
+	public async Task<ActionResult<List<UserDto>>> GetUsersInProject(Guid projectId)
 	{
 		Project project = await projectsService.GetProjectByIdAsync(projectId);
 
@@ -176,7 +176,7 @@ public class ProjectsController : ControllerBase
 			user.Roles = (await userManager.GetRolesAsync(mapper.Map<AppUser>(user))).ToList();
 		}
 
-		return Ok(userDtos);
+		return userDtos;
 
 	}
 
@@ -228,7 +228,7 @@ public class ProjectsController : ControllerBase
 
 	// 8) Get Issues In Project
 	[HttpGet("{projectId}/issues")]
-	public async Task<IActionResult> GetIssuesInProject(Guid projectId)
+	public async Task<ActionResult<List<IssueDto>>> GetIssuesInProject(Guid projectId)
 	{
 		Project project = await projectsService.GetProjectByIdAsync(projectId);
 
@@ -243,7 +243,7 @@ public class ProjectsController : ControllerBase
 
 		List<IssueDto> issueDtos = mapper.Map<List<IssueDto>>(issues);
 
-		return Ok(issueDtos);
+		return issueDtos;
 	}
 	private string Slugify(string name)
 	{
