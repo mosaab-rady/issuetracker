@@ -29,19 +29,19 @@ public class RolesController : ControllerBase
 
 	// 1) get all Roles
 	[HttpGet]
-	public async Task<IActionResult> GetAllRoles()
+	public async Task<List<RoleDto>> GetAllRoles()
 	{
 		List<IdentityRole> roles = await rolesManager.Roles.ToListAsync();
 
 		List<RoleDto> roleDtos = mapper.Map<List<RoleDto>>(roles);
 
-		return Ok(roleDtos);
+		return roleDtos;
 	}
 
 
 	// 2) get Role By id
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetRoleById(string id)
+	public async Task<ActionResult<RoleDto>> GetRoleById(string id)
 	{
 		IdentityRole role = await rolesManager.FindByIdAsync(id);
 
@@ -54,7 +54,7 @@ public class RolesController : ControllerBase
 
 		RoleDto roleDto = mapper.Map<RoleDto>(role);
 
-		return Ok(roleDto);
+		return roleDto;
 	}
 
 
@@ -81,7 +81,7 @@ public class RolesController : ControllerBase
 
 	// 4) Update Role
 	[HttpPut("{id}")]
-	public async Task<IActionResult> UpdateRole(CreateRoleDto createRoleDto, string id)
+	public async Task<ActionResult<RoleDto>> UpdateRole(CreateRoleDto createRoleDto, string id)
 	{
 		IdentityRole identityRole = await rolesManager.FindByIdAsync(id);
 
@@ -103,7 +103,7 @@ public class RolesController : ControllerBase
 
 		RoleDto roleDto = mapper.Map<RoleDto>(identityRole);
 
-		return Ok(roleDto);
+		return roleDto;
 	}
 
 
@@ -136,7 +136,7 @@ public class RolesController : ControllerBase
 
 	// 6) Get Users In Role
 	[HttpGet("{roleId}/users")]
-	public async Task<IActionResult> GetUsersInRole(string roleId)
+	public async Task<ActionResult<List<UserDto>>> GetUsersInRole(string roleId)
 	{
 		IdentityRole identityRole = await rolesManager.FindByIdAsync(roleId);
 
@@ -157,14 +157,14 @@ public class RolesController : ControllerBase
 			userDto.Roles = (await userManager.GetRolesAsync(appUser)).ToList();
 		}
 
-		return Ok(userDtos);
+		return userDtos.ToList();
 
 	}
 
 
 	// 7) Edit Users In Role
 	[HttpPost("{roleId}/editusers")]
-	public async Task<IActionResult> EditUsersInRole(List<AssignUserDto> assignUserDtos, string roleId)
+	public async Task<ActionResult<List<UserDto>>> EditUsersInRole(List<AssignUserDto> assignUserDtos, string roleId)
 	{
 		IdentityRole identityRole = await rolesManager.FindByIdAsync(roleId);
 
@@ -211,7 +211,7 @@ public class RolesController : ControllerBase
 			userDto.Roles = (await userManager.GetRolesAsync(appUser)).ToList();
 		}
 
-		return Ok(userDtos);
+		return userDtos.ToList();
 	}
 
 
